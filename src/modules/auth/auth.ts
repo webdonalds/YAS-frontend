@@ -1,4 +1,4 @@
-// action type
+// Action type
 const LOGIN_REQUEST = 'auth/LOGIN_REQUEST' as const;
 const LOGIN_SUCCESS = 'auth/LOGIN_SUCCESS' as const;
 const LOGIN_ERROR = 'auth/LOGIN_ERROR' as const;
@@ -11,12 +11,15 @@ type LoginErrorResponse = {
   // TODO: after api structure fixed
 }
 
-// action generator
+
+// Action generator
 export const loginRequest = () => ({ type: LOGIN_REQUEST });
 
-export const loginSuccess = (res: LoginSuccessResponse) => ({ 
+export const loginSuccess = (token: string) => ({ 
   type: LOGIN_SUCCESS,
-  payload: res,
+  payload: {
+    token: token,
+  }
 });
 
 export const loginError = (error: LoginErrorResponse) => ({
@@ -24,11 +27,13 @@ export const loginError = (error: LoginErrorResponse) => ({
   payload: error,
 });
 
-type AuthAction =
+export type AuthAction =
 | ReturnType<typeof loginRequest>
 | ReturnType<typeof loginSuccess>
 | ReturnType<typeof loginError>
 
+
+// State
 type AuthState = {
   bearerToken: string | null,
   error: LoginErrorResponse | null,
@@ -44,10 +49,9 @@ export default function auth(state = initialState, action: AuthAction) {
     case LOGIN_REQUEST:
       return state;
     case LOGIN_SUCCESS:
-      const jwtToken = "1234" // TODO: JWT token by using accessToken and secretKey
       return {
         ...state,
-        bearerToken: jwtToken,
+        bearerToken: action.payload.token,
         error: null,
       };
     case LOGIN_ERROR:
