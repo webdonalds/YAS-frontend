@@ -1,36 +1,28 @@
-// Action type
-const LOGIN_REQUEST = 'auth/LOGIN_REQUEST' as const;
-const LOGIN_SUCCESS = 'auth/LOGIN_SUCCESS' as const;
-const LOGIN_ERROR = 'auth/LOGIN_ERROR' as const;
+import { createAction, ActionType, createReducer } from 'typesafe-actions';
 
-type LoginSuccessResponse = {
-  accessToken: string,
-  secretKey: string,
-}
+// Action type
+const LOGIN_REQUEST = 'auth/LOGIN_REQUEST';
+const LOGIN_SUCCESS = 'auth/LOGIN_SUCCESS';
+const LOGIN_ERROR = 'auth/LOGIN_ERROR';
+
 type LoginErrorResponse = {
   // TODO: after api structure fixed
 }
 
 
 // Action generator
-export const loginRequest = () => ({ type: LOGIN_REQUEST });
+export const loginRequest = createAction(LOGIN_REQUEST)();
+export const loginSuccess = createAction(
+  LOGIN_SUCCESS,
+  (token: string) => token,
+)();
+export const loginError = createAction(
+  LOGIN_ERROR,
+  (error: LoginErrorResponse) => error,
+)();
 
-export const loginSuccess = (token: string) => ({ 
-  type: LOGIN_SUCCESS,
-  payload: {
-    token: token,
-  }
-});
-
-export const loginError = (error: LoginErrorResponse) => ({
-  type: LOGIN_ERROR ,
-  payload: error,
-});
-
-export type AuthAction =
-| ReturnType<typeof loginRequest>
-| ReturnType<typeof loginSuccess>
-| ReturnType<typeof loginError>
+const actions = { loginRequest, loginSuccess, loginError };
+export type AuthAction = ActionType<typeof actions>;
 
 
 // State
@@ -44,23 +36,19 @@ const initialState: AuthState = {
   error: null,
 };
 
-export default function auth(state = initialState, action: AuthAction) {
-  switch (action.type) {
-    case LOGIN_REQUEST:
-      return state;
-    case LOGIN_SUCCESS:
-      return {
-        ...state,
-        bearerToken: action.payload.token,
-        error: null,
-      };
-    case LOGIN_ERROR:
-      return {
-        ...state,
-        bearerTokean: null,
-        error: action.payload,
-      };
-    default:
-      return state;
-  }
-}
+
+const auth = createReducer<AuthState, AuthAction>(initialState, {
+  [LOGIN_REQUEST]: state => state,
+  [LOGIN_SUCCESS]: (state, action) => ({
+    ...state,
+    bearerToken: action.payload,
+    error: null,
+  }),
+  [LOGIN_ERROR]: (state, action) => ({
+    ...state,
+    bearerTokean: null,
+    error: action.payload,
+  })
+});
+
+export default auth;
