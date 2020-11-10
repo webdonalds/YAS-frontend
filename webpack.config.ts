@@ -39,6 +39,7 @@ const config: webpack.Configuration = {
     }),
     new webpack.DefinePlugin({
       API_URL: JSON.stringify(process.env.API_URL),
+      GOOGLE_CLIENT_ID: JSON.stringify(process.env.GOOGLE_CLIENT_ID),
     }),
   ],
   resolve: {
