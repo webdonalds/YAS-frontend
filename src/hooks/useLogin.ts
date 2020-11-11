@@ -7,7 +7,7 @@ const useLogin = () => {
   const { bearerToken, error } = useSelector((state: RootState) => state.auth);
   const dispatch = useDispatch();
 
-  const onLogin = useCallback(() => dispatch(loginThunk()), [dispatch])
+  const onLogin = useCallback((code) => dispatch(loginThunk(code)), [dispatch])
 
   return {
     bearerToken,

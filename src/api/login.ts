@@ -1,14 +1,23 @@
-// TODO: use google login api
-const getCodeFromGoogleLogin = async () => {
-  const temp = () => new Promise((resolve, _) => {
-    setTimeout(()=>{
-      resolve("1234")
-    }, 2000)
-  });
-  const token: any = await temp();
-  return token;
+import axios from 'axios';
+
+const getAuthToken = async (code: string): Promise<string> => {
+  try {
+    const res = await axios({
+      baseURL: API_URL,
+      url: '/v1/auth',
+      method: 'get',
+      params: {
+        code: code,
+      },
+    });
+    // TODO: make jwtToken from res
+    return res.data.email;
+  } catch(error) {
+    // TODO: error
+    return "";
+  }
 }
 
 export {
-  getCodeFromGoogleLogin,
+  getAuthToken,
 };

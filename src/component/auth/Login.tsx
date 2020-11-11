@@ -23,8 +23,8 @@ const Login: React.SFC<RouteComponentProps> = ({ history }) => {
   }
 
   const handleSuccessLogin = (response: GoogleLoginResponse | GoogleLoginResponseOffline) => {
-    // TODO
-    console.log(response);
+    // TOOD: Exception
+    onLogin(response.code)
   }
 
   const handleFailureLogin = (error: any) => {
@@ -34,7 +34,6 @@ const Login: React.SFC<RouteComponentProps> = ({ history }) => {
 
   return (
     <div>
-      login 페이지
       <GoogleLogin
         clientId={GOOGLE_CLIENT_ID}
         responseType="code"

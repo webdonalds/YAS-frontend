@@ -1,15 +1,15 @@
 import { ThunkAction } from 'redux-thunk';
 import { RootState } from '..';
 import { AuthAction, loginRequest, loginSuccess, loginError } from '../auth/auth';
-import { getCodeFromGoogleLogin } from '../../api/login';
+import { getAuthToken } from '../../api/login';
 
 // TODO: logic
-const loginThunk = (): ThunkAction<void, RootState, null, AuthAction> => {
+const loginThunk = (code: string): ThunkAction<void, RootState, null, AuthAction> => {
   return async (dispatch) => {
     dispatch(loginRequest());
 
     try {
-      const token = await getCodeFromGoogleLogin()
+      const token = await getAuthToken(code)
       dispatch(loginSuccess(token))
     } catch (e) {
       dispatch(loginError(e));
