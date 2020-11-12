@@ -3,7 +3,6 @@ import { RootState } from '..';
 import { AuthAction, loginRequest, loginSuccess, loginError } from '../auth/auth';
 import { getAuthToken } from '../../api/login';
 
-// TODO: logic
 const loginThunk = (code: string): ThunkAction<void, RootState, null, AuthAction> => {
   return async (dispatch) => {
     dispatch(loginRequest());

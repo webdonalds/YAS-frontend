@@ -13,8 +13,7 @@ const getAuthToken = async (code: string): Promise<string> => {
     // TODO: make jwtToken from res
     return res.data.email;
   } catch(error) {
-    // TODO: error
-    return "";
+    throw error;
   }
 }
 

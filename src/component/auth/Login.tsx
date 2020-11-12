@@ -17,19 +17,17 @@ const Login: React.SFC<RouteComponentProps> = ({ history }) => {
     return null;
   }
 
-  // login error
+  let errorComponent = null
   if(error != null) {
-    // TODO
+    errorComponent = (<div>Error</div>)
   }
 
   const handleSuccessLogin = (response: GoogleLoginResponse | GoogleLoginResponseOffline) => {
-    // TOOD: Exception
     onLogin(response.code)
   }
 
   const handleFailureLogin = (error: any) => {
-    // TODO
-    console.log(error);
+    alert("구글 로그인에 실패하였습니다.\n잠시 후에 다시 시도해주세요.");
   }
 
   return (
@@ -41,6 +39,7 @@ const Login: React.SFC<RouteComponentProps> = ({ history }) => {
         onFailure={handleFailureLogin}
         redirectUri="postmessage"
       />
+      {errorComponent}
     </div>
   );
 }
