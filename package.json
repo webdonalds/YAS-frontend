@@ -19,7 +19,9 @@
   "homepage": "https://github.com/webdonalds/YAS-frontend#readme",
   "dependencies": {
     "@types/axios": "^0.14.0",
+    "@types/jsonwebtoken": "^8.5.0",
     "axios": "^0.21.0",
+    "jsonwebtoken": "^8.5.1",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-google-login": "^5.1.22",

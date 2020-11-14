@@ -19,11 +19,12 @@ const Login: React.SFC<RouteComponentProps> = ({ history }) => {
 
   let errorComponent = null
   if(error != null) {
+    // TODO: error code별 예외처리
     errorComponent = (<div>Error</div>)
   }
 
   const handleSuccessLogin = (response: GoogleLoginResponse | GoogleLoginResponseOffline) => {
-    onLogin(response.code)
+    onLogin(response.code);
   }
 
   const handleFailureLogin = (error: any) => {

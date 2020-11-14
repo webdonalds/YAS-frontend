@@ -8,8 +8,8 @@ const loginThunk = (code: string): ThunkAction<void, RootState, null, AuthAction
     dispatch(loginRequest());
 
     try {
-      const token = await getAuthToken(code)
-      dispatch(loginSuccess(token))
+      const token = await getAuthToken(code);
+      dispatch(loginSuccess(token));
     } catch (e) {
       dispatch(loginError(e));
     }

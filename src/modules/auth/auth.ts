@@ -6,7 +6,8 @@ const LOGIN_SUCCESS = 'auth/LOGIN_SUCCESS';
 const LOGIN_ERROR = 'auth/LOGIN_ERROR';
 
 type LoginErrorResponse = {
-  // TODO: after api structure fixed
+  code: number,
+  message: string,
 }
 
 
