@@ -27,7 +27,7 @@ const Login: React.SFC<RouteComponentProps> = ({ history }) => {
     onLogin(response.code);
   }
 
-  const handleFailureLogin = (error: any) => {
+  const handleFailureLogin = (error: any) => { // eslint-disable-line
     alert("구글 로그인에 실패하였습니다.\n잠시 후에 다시 시도해주세요.");
   }
 
