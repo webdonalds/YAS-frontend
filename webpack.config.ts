@@ -2,6 +2,9 @@ import path from "path";
 import webpack from "webpack";
 import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 const config: webpack.Configuration = {
   entry: "./src/index.tsx",
@@ -33,6 +36,10 @@ const config: webpack.Configuration = {
       eslint: {
         files: "./src/**/*",
       },
+    }),
+    new webpack.DefinePlugin({
+      API_URL: JSON.stringify(process.env.API_URL),
+      GOOGLE_CLIENT_ID: JSON.stringify(process.env.GOOGLE_CLIENT_ID),
     }),
   ],
   resolve: {

@@ -9,6 +9,10 @@ YAS is a platform web service you can share youtube video with your friends.
 ## setup
 ```bash
 npm install
+
+# set environment variable
+cp .env.example .env
+vi .env
 ```
 
 ## test
