@@ -4,12 +4,14 @@ import { loginThunk } from '../modules/auth/authThunk';
 import { useCallback } from 'react';
 
 const useLogin = () => {
-  const { bearerToken, error } = useSelector((state: RootState) => state.auth);
+  const { userInfo, bearerToken, error } = useSelector((state: RootState) => state.auth);
   const dispatch = useDispatch();
 
   const onLogin = useCallback((code) => dispatch(loginThunk(code)), [dispatch])
 
+
   return {
+    userInfo,
     bearerToken,
     error,
     onLogin,

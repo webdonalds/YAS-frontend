@@ -6,7 +6,8 @@ type AuthTokenResponse = {
   auth: tokenData,
 };
 
-const getAuthToken = async (code: string): Promise<string> => {
+
+const getAuthToken = async (code: string): Promise<userLoginInfo> => {
   const res = await axios.request<AuthTokenResponse>({
     baseURL: API_URL,
     url: '/v1/auth',
@@ -22,7 +23,13 @@ const getAuthToken = async (code: string): Promise<string> => {
   }, data.auth.yasSecretKey, {
     expiresIn:3600,
   });
-  return token;
+ 
+  const ret = {
+    userInfo: data.data,
+    token: token
+  }
+
+  return ret;
 }
 
 export {

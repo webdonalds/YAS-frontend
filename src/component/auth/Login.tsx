@@ -4,7 +4,7 @@ import useLogin from '../../hooks/useLogin';
 import { GoogleLogin, GoogleLoginResponseOffline, GoogleLoginResponse } from 'react-google-login';
 
 const Login: React.SFC<RouteComponentProps> = ({ history }) => {
-  const { bearerToken, error, onLogin } = useLogin();
+  const { userInfo, bearerToken, error, onLogin } = useLogin();
 
   useEffect(() => {
       // already login

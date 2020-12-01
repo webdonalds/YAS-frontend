@@ -6,8 +6,14 @@ type userData = {
   aboutMe: string,
 };
 
+type userLoginInfo = {
+  userInfo: userData,
+  token: string
+};
+
 type tokenData = {
   yasToken: string,
   yasSecretKey: string,
   expireTime: number,
 };
+

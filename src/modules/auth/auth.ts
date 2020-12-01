@@ -15,7 +15,12 @@ type LoginErrorResponse = {
 export const loginRequest = createAction(LOGIN_REQUEST)();
 export const loginSuccess = createAction(
   LOGIN_SUCCESS,
-  (token: string) => token,
+  (userInfo: userData, token: string) => {
+    return {
+      userInfo: userInfo,
+      bearerToken: token
+    }
+  },
 )();
 export const loginError = createAction(
   LOGIN_ERROR,
@@ -28,11 +33,13 @@ export type AuthAction = ActionType<typeof actions>;
 
 // State
 type AuthState = {
+  userInfo: userData | null,
   bearerToken: string | null,
   error: LoginErrorResponse | null,
 }
 
 const initialState: AuthState = {
+  userInfo: null,
   bearerToken: null,
   error: null,
 };
@@ -42,12 +49,13 @@ const auth = createReducer<AuthState, AuthAction>(initialState, {
   [LOGIN_REQUEST]: state => state,
   [LOGIN_SUCCESS]: (state, action) => ({
     ...state,
-    bearerToken: action.payload,
+    userInfo: action.payload.userInfo,
+    bearerToken: action.payload.bearerToken,
     error: null,
   }),
   [LOGIN_ERROR]: (state, action) => ({
     ...state,
-    bearerTokean: null,
+    bearerToken: null,
     error: action.payload,
   })
 });
