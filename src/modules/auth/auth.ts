@@ -55,6 +55,7 @@ const auth = createReducer<AuthState, AuthAction>(initialState, {
   }),
   [LOGIN_ERROR]: (state, action) => ({
     ...state,
+    userInfo: null,
     bearerToken: null,
     error: action.payload,
   })
