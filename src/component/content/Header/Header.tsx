@@ -1,14 +1,17 @@
 import React, { useEffect } from "react";
 import useLogin from "../../../hooks/useLogin";
+import GetLogin from "../../../hooks/GetLogin";
 import { GoogleLogin, GoogleLoginResponseOffline, GoogleLoginResponse } from 'react-google-login';
 
 import "./Header.css";
 
 const Header:React.FC = () => {
-  const { userInfo, bearerToken, error, onLogin } = useLogin();
+  const { userInfo, tokens, error } = GetLogin();
+  const onLogin = useLogin();
   
   useEffect(() => {
     console.log(userInfo);
+    console.log(tokens);
   });
   
   

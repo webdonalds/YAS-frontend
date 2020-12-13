@@ -1,19 +1,22 @@
 import React, { useEffect } from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import useLogin from '../../hooks/useLogin';
+import GetLogin from '../../hooks/GetLogin';
 import { GoogleLogin, GoogleLoginResponseOffline, GoogleLoginResponse } from 'react-google-login';
 
 const Login: React.SFC<RouteComponentProps> = ({ history }) => {
-  const { userInfo, bearerToken, error, onLogin } = useLogin();
+  const { userInfo, tokens, error } = GetLogin();
+  const onLogin = useLogin();
 
   useEffect(() => {
       // already login
-    if(bearerToken != null) {
+    if(tokens != null) {
+      console.log(userInfo);
       history.push("/");
     }
   });
 
-  if(bearerToken != null) {
+  if(tokens != null) {
     return null;
   }
 
