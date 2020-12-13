@@ -1,16 +1,15 @@
 import axios from 'axios';
-import jwt from 'jsonwebtoken';
 
 type AuthTokenResponse = {
   data: userData,
-  auth: tokenData,
+  auth: tokens,
 };
 
 
 const getAuthToken = async (code: string): Promise<userLoginInfo> => {
   const res = await axios.request<AuthTokenResponse>({
     baseURL: API_URL,
-    url: '/v1/auth',
+    url: '/v1/auth/login',
     method: 'get',
     params: {
       code: code,
@@ -18,15 +17,10 @@ const getAuthToken = async (code: string): Promise<userLoginInfo> => {
   });
 
   const data = res.data;
-  const token: string = jwt.sign({
-    yasToken: data.auth.yasToken,
-  }, data.auth.yasSecretKey, {
-    expiresIn:3600,
-  });
- 
+  
   const ret = {
     userInfo: data.data,
-    token: token
+    tokens: data.auth
   }
 
   return ret;
