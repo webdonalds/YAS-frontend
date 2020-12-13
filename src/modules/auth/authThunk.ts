@@ -1,6 +1,6 @@
 import { ThunkAction } from 'redux-thunk';
 import { RootState } from '..';
-import { AuthAction, loginRequest, loginSuccess, loginError } from './auth';
+import { AuthAction, loginRequest, loginSuccess, loginError, logoutRequest } from './auth';
 import { getAuthToken } from '../../api/login';
 import localStorageService from '../../service/localStorageService';
 
@@ -24,6 +24,12 @@ const loginThunk = (code: string): ThunkAction<void, RootState, null, AuthAction
   }
 }
 
+const logoutThunk = (): ThunkAction<void, RootState, null, AuthAction> => {
+  return async(dispatch) => {
+    dispatch(logoutRequest());
+  }
+}
+
 
 const getSavedLoginThunk = (loginInfo: userLoginInfo): ThunkAction<void, RootState, null, AuthAction> => {
   return async (dispatch) => {
@@ -34,5 +40,6 @@ const getSavedLoginThunk = (loginInfo: userLoginInfo): ThunkAction<void, RootSta
 
 export {
   loginThunk,
-  getSavedLoginThunk
+  logoutThunk,
+  getSavedLoginThunk,
 };

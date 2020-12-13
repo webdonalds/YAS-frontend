@@ -4,6 +4,7 @@ import { createAction, ActionType, createReducer } from 'typesafe-actions';
 const LOGIN_REQUEST = 'auth/LOGIN_REQUEST';
 const LOGIN_SUCCESS = 'auth/LOGIN_SUCCESS';
 const LOGIN_ERROR = 'auth/LOGIN_ERROR';
+const LOGOUT_REQUEST = 'auth/LOGOUT_REQUEST';
 
 type LoginErrorResponse = {
   code: number,
@@ -26,8 +27,9 @@ export const loginError = createAction(
   LOGIN_ERROR,
   (error: LoginErrorResponse) => error,
 )();
+export const logoutRequest = createAction(LOGOUT_REQUEST)();
 
-const actions = { loginRequest, loginSuccess, loginError };
+const actions = { loginRequest, loginSuccess, loginError, logoutRequest };
 export type AuthAction = ActionType<typeof actions>;
 
 
@@ -58,7 +60,13 @@ const auth = createReducer<AuthState, AuthAction>(initialState, {
     userInfo: null,
     tokens: null,
     error: action.payload,
-  })
+  }),
+  [LOGOUT_REQUEST] : (state) => ({
+    ...state,
+    userInfo: null,
+    tokens: null,
+    error: null
+  }),
 });
 
 export default auth;

@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import useLogin from "../../../hooks/useLogin";
 import GetLogin from "../../../hooks/GetLogin";
+import useLogout from "../../../hooks/useLogout";
 import { GoogleLogin, GoogleLoginResponseOffline, GoogleLoginResponse } from 'react-google-login';
 
 import "./Header.css";
@@ -8,6 +9,7 @@ import "./Header.css";
 const Header:React.FC = () => {
   const { userInfo, tokens, error } = GetLogin();
   const onLogin = useLogin();
+  const onLogout = useLogout();
   
   useEffect(() => {
     console.log(userInfo);
@@ -38,6 +40,16 @@ const Header:React.FC = () => {
       redirectUri="postmessage"
     />
   );
+  
+  const logoutButton = (
+    <div className="header_right_end_container">
+      <div>
+        <button onClick={onLogout}>
+          로그아웃
+        </button>
+      </div>
+    </div>
+  );
 
   return (
     <div className="header_container">
@@ -48,11 +60,13 @@ const Header:React.FC = () => {
           </a>
         </div>
 
+        {userInfo ? logoutButton : null}
+      
         <div className="header_right_end_container">
           <div>
             {userInfo ? userInfo.nickname : googleLoginButton }
           </div>
-        </div>    
+        </div>
         <div className="header_right_end_container">
           <div>
             {userInfo ? "영상추가" : ""}
