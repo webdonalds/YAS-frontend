@@ -14,10 +14,10 @@ const loginThunk = (code: string): ThunkAction<void, RootState, null, AuthAction
       // save logged in to local storage
       localStorageService.setUserLoginInfoToLocalStorage({
         userInfo: loginInfo.userInfo,
-        token: loginInfo.token
+        tokens: loginInfo.tokens
       });
 
-      dispatch(loginSuccess(loginInfo.userInfo, loginInfo.token));
+      dispatch(loginSuccess(loginInfo.userInfo, loginInfo.tokens));
     } catch (e) {
       dispatch(loginError(e));
     }
@@ -28,7 +28,7 @@ const loginThunk = (code: string): ThunkAction<void, RootState, null, AuthAction
 const getSavedLoginThunk = (loginInfo: userLoginInfo): ThunkAction<void, RootState, null, AuthAction> => {
   return async (dispatch) => {
     console.log("111");
-    dispatch(loginSuccess(loginInfo.userInfo, loginInfo.token));
+    dispatch(loginSuccess(loginInfo.userInfo, loginInfo.tokens));
   }
 }
 
