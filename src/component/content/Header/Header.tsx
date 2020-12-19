@@ -11,10 +11,6 @@ const Header:React.FC = () => {
   const onLogin = useLogin();
   const onLogout = useLogout();
   
-  useEffect(() => {
-    console.log(userInfo);
-    console.log(tokens);
-  });
   
   
   const handleSuccessLogin = (response: GoogleLoginResponse | GoogleLoginResponseOffline) => {

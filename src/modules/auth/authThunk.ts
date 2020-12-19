@@ -33,7 +33,6 @@ const logoutThunk = (): ThunkAction<void, RootState, null, AuthAction> => {
 
 const getSavedLoginThunk = (loginInfo: userLoginInfo): ThunkAction<void, RootState, null, AuthAction> => {
   return async (dispatch) => {
-    console.log("111");
     dispatch(loginSuccess(loginInfo.userInfo, loginInfo.tokens));
   }
 }

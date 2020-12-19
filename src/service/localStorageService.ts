@@ -3,7 +3,7 @@ const userLoginInfoKey = "userLoginInfo";
 
 
 function getUserLoginInfoFromLocalStorage(): userLoginInfo {
-    const ret:userLoginInfo = JSON.parse(localStorage.getItem(userLoginInfoKey));
+    const ret:userLoginInfo = JSON.parse(localStorage.getItem(userLoginInfoKey) || '{}');
     return ret as userLoginInfo;
 }
 
