@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import useLogin from "../../../hooks/useLogin";
 import GetLogin from "../../../hooks/GetLogin";
 import useLogout from "../../../hooks/useLogout";
@@ -7,7 +7,7 @@ import { GoogleLogin, GoogleLoginResponseOffline, GoogleLoginResponse } from 're
 import "./Header.css";
 
 const Header:React.FC = () => {
-  const { userInfo, tokens, error } = GetLogin();
+  const { userInfo, error } = GetLogin();
   const onLogin = useLogin();
   const onLogout = useLogout();
   
