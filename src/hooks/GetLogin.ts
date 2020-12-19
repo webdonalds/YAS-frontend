@@ -11,7 +11,7 @@ const GetLogin = () => {
 
   // if not initialized
   if(userInfo==null && tokens==null && error==null){
-    const savedUserLoginInfo: userLoginInfo = localStorageService.getUserLoginInfoFromLocalStorage();
+    const savedUserLoginInfo = localStorageService.getUserLoginInfoFromLocalStorage();
     
     if(savedUserLoginInfo!=null){
       dispatch(getSavedLoginThunk(savedUserLoginInfo));
