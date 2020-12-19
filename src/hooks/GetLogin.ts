@@ -10,6 +10,8 @@ const GetLogin = () => {
   const dispatch = useDispatch();
 
   if(error!=null){
+    // if error is not null (if there's error)
+    // then userInfo and tokens will be null.
     return {
       userInfo,
       tokens,
