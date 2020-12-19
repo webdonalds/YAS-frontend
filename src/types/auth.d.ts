@@ -3,11 +3,16 @@ type userData = {
   email: string,
   nickname: string,
   imagePath: string,
-  aboutMe: string,
+  aboutMe: string
 };
 
-type tokenData = {
-  yasToken: string,
-  yasSecretKey: string,
-  expireTime: number,
+type userLoginInfo = {
+  userInfo: userData,
+  tokens: tokens
 };
+
+type tokens = {
+  yasAccessToken: string,
+  yasRefreshToken: string
+};
+

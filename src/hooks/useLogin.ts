@@ -1,19 +1,14 @@
-import { useSelector, useDispatch } from 'react-redux';
-import { RootState } from '../modules';
+import { useDispatch } from 'react-redux';
 import { loginThunk } from '../modules/auth/authThunk';
 import { useCallback } from 'react';
 
+
 const useLogin = () => {
-  const { bearerToken, error } = useSelector((state: RootState) => state.auth);
   const dispatch = useDispatch();
 
   const onLogin = useCallback((code) => dispatch(loginThunk(code)), [dispatch])
 
-  return {
-    bearerToken,
-    error,
-    onLogin,
-  }
+  return onLogin;
 }
 
 export default useLogin;
