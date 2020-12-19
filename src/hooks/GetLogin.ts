@@ -9,17 +9,8 @@ const GetLogin = () => {
 
   const dispatch = useDispatch();
 
-  if(error!=null){
-    // if error is not null (if there's error)
-    // then userInfo and tokens will be null.
-    return {
-      userInfo,
-      tokens,
-      error,
-    }
-  }
-
-  if(userInfo==null && tokens==null){
+  // if not initialized
+  if(userInfo==null && tokens==null && error==null){
     const savedUserLoginInfo: userLoginInfo = localStorageService.getUserLoginInfoFromLocalStorage();
     
     if(savedUserLoginInfo!=null){
