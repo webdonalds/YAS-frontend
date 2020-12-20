@@ -11,8 +11,6 @@ const Header:React.FC = () => {
   const onLogin = useLogin();
   const onLogout = useLogout();
   
-  
-  
   const handleSuccessLogin = (response: GoogleLoginResponse | GoogleLoginResponseOffline) => {
     onLogin(response.code);
   }
@@ -24,7 +22,6 @@ const Header:React.FC = () => {
   if(error!=null){
     alert("로그인 중 에러가 발생하였습니다.");
   }
-
 
   const googleLoginButton = (
     <GoogleLogin
