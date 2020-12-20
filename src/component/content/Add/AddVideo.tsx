@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import AddVideoHook from "../../../hooks/AddVideo";
-import { FaTimes } from 'react-icons/fa';
+import { FaTimes, FaList } from 'react-icons/fa';
 
 import "./AddVideo.css";
 
@@ -17,13 +17,20 @@ const AddVideo: React.FC = () => {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(init, []);
 
+  // TODO: 눌렀을 때, 검색창 띄우기
+  const searchButton = (
+    <div className="add-video-input-search-container">
+      <span className="badge bg-secondary add-video-input-search"> <FaList /> 유튜브에서 찾아보기</span>
+    </div>
+  );
+
   // TODO: implement debounce
   const handleUrlChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setUrl(e.target.value);
   };
   const urlInput = (
     <div className="add-video-input-container">
-      <span className="badge bg-primary">url</span>
+      <span className="badge bg-primary">링크</span>
       <input name="url" value={url} onChange={handleUrlChange}/>
     </div>
   );
@@ -32,7 +39,12 @@ const AddVideo: React.FC = () => {
   const thumbnailView = (id != "") ? (<div className="add-video-thumbnail-container">
     <img src={getYoutubeThumbnailUrl(id)} />
   </div>) : (<div className="add-video-thumbnail-container">
-    empty
+    <div>
+      <FaTimes className="add-video-thumbnail-times" />
+    </div>
+    <div className="add-video-thumbnail-text">
+      완전한 유튜브 링크를 입력해주세요.
+    </div>
   </div>);
 
   const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -82,18 +94,23 @@ const AddVideo: React.FC = () => {
     </div>
   );
 
+  const tagInput = (tag: string, idx: number) => {
+    return (<div key={idx} className="add-video-tag-container">
+      {tag} <FaTimes className="add-video-tag-delete" onClick={()=>{deleteTag(tag)}} />
+    </div>);
+  };
+
   return (<div className="add-video-container">
+    {searchButton}
     {urlInput}
     {thumbnailView}
     {titleInput}
     {descriptionInput}
     {tagsInput}
-    <div>
-      {tags.map((tag, idx) => {
-        return (<div key={idx}>{tag} <FaTimes className="add-video-tag-delete" onClick={()=>{deleteTag(tag)}} /></div>);
-      })}
+    <div className="add-video-tags-container">
+      {tags.map((tag, idx) => tagInput(tag, idx))}
     </div>
-    <button>등록</button>
+    <button type="button" className="btn btn-success add-video-submit-button">등록</button>
   </div>);
 }
 
