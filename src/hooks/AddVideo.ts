@@ -2,6 +2,12 @@ import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../modules';
 import { initialize, setValue } from '../modules/addVideo/addVideo';
 
+function getVideoId(youtubeUrl: string): string {
+  const regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*/;
+  const match = youtubeUrl.match(regExp);
+  return (match && match[7].length==11) ? match[7] : "";
+}
+
 const AddVideoHook = () => {
   const { id, url, title, description, tags } = useSelector((state: RootState) => state.addVideo);
   const dispatch = useDispatch();
@@ -9,10 +15,11 @@ const AddVideoHook = () => {
   const init = () => {
     dispatch(initialize());
   }
-  
+
   const setUrl = (url: string) => {
-    // TODO: set Id, thumbnail
+    const id = getVideoId(url);
     dispatch(setValue('url', url));
+    dispatch(setValue('id', id));
   };
 
   const setTitle = (title: string) => {
@@ -21,6 +28,14 @@ const AddVideoHook = () => {
 
   const setDescription = (description: string) => {
     dispatch(setValue('description', description));
+  }
+
+  const addTag = (tag: string) => {
+    dispatch(addTag(tag));
+  }
+
+  const deleteTag = (tag: string) => {
+    dispatch(deleteTag(tag));
   }
 
   return {
@@ -33,6 +48,8 @@ const AddVideoHook = () => {
     setUrl,
     setTitle,
     setDescription,
+    addTag,
+    deleteTag,
   }
 }
 
