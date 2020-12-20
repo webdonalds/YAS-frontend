@@ -4,6 +4,7 @@ import { createAction, ActionType, createReducer } from 'typesafe-actions';
 const ADD_TAG = 'add-video/ADD_TAG';
 const DELETE_TAG = 'add-video/DELETE_TAG';
 const SET_VALUE = 'add-video/SET_VALUE';
+const INITIALIZE = 'add-video/INITIALIZE';
 
 
 // Action generator
@@ -32,8 +33,9 @@ export const setValue = createAction(
     }
   }
 )();
+export const initialize = createAction(INITIALIZE)();
 
-const actions = { addTag, deleteTag, setValue };
+const actions = { addTag, deleteTag, setValue, initialize };
 export type AddVideoAction = ActionType<typeof actions>;
 
 
@@ -71,6 +73,7 @@ const addVideo = createReducer<AddVideoState, AddVideoAction>(initialState, {
     ...state,
     [action.payload.name]: action.payload.value,
   }),
+  [INITIALIZE]: () => initialState
 });
 
 export default addVideo;

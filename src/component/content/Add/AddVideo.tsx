@@ -1,8 +1,12 @@
-import React from "react";
+import React, { useEffect } from "react";
 import AddVideoHook from "../../../hooks/AddVideo";
 
 const AddVideo: React.FC = () => {
-  const { url, title, description, setUrl, setTitle, setDescription } = AddVideoHook();
+  const { url, title, description, init, setUrl, setTitle, setDescription } = AddVideoHook();
+
+  useEffect(() => {
+    init();
+  }, []);
 
   const handleUrlChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setUrl(e.target.value);

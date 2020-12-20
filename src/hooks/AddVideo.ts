@@ -1,10 +1,14 @@
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../modules';
-import { setValue } from '../modules/addVideo/addVideo';
+import { initialize, setValue } from '../modules/addVideo/addVideo';
 
 const AddVideoHook = () => {
   const { id, url, title, description, tags } = useSelector((state: RootState) => state.addVideo);
   const dispatch = useDispatch();
+
+  const init = () => {
+    dispatch(initialize());
+  }
   
   const setUrl = (url: string) => {
     // TODO: set Id, thumbnail
@@ -25,6 +29,7 @@ const AddVideoHook = () => {
     title,
     description,
     tags,
+    init,
     setUrl,
     setTitle,
     setDescription,
