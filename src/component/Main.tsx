@@ -1,7 +1,7 @@
 import React from "react";
 import { BrowserRouter, Switch, Route } from "react-router-dom";
 import Login from "./auth/Login";
-import Add from "./content/Add/Add";
+import Add from "./content/Add/AddVideo";
 import Header from "./content/Header/Header";
 
 import "./Main.css";
