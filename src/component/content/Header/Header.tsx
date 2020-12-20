@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import useLogin from "../../../hooks/useLogin";
 import GetLogin from "../../../hooks/GetLogin";
 import useLogout from "../../../hooks/useLogout";
@@ -48,9 +49,9 @@ const Header:React.FC = () => {
     <div className="header_container">
       <div className="header_content">
         <div className="header_logo_container">
-          <a href="/">
+          <Link to="/">
             <img src="https://i.pinimg.com/originals/de/1c/91/de1c91788be0d791135736995109272a.png"/>
-          </a>
+          </Link>
         </div>
 
         {userInfo ? logoutButton : null}

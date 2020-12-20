@@ -7,18 +7,18 @@ import "./Main.css";
 
 const Main: React.FC = () => {
   return (
-    <div className="full_main_page">
-      <div className="inner_main_page">
-        <Header />
-        <BrowserRouter>
-          <Switch>
-            <Route path="/" exact={true} component={() => (<div />)} />
-            <Route path="/login" component={Login} />
-            {/* TODO: other path handling */}
-          </Switch>
-        </BrowserRouter>
+    <BrowserRouter>
+      <div className="full_main_page">
+        <div className="inner_main_page">
+          <Header />
+            <Switch>
+              <Route path="/" exact={true} component={() => (<div />)} />
+              <Route path="/login" component={Login} />
+              {/* TODO: other path handling */}
+            </Switch>
+        </div>
       </div>
-    </div>
+    </BrowserRouter>
   );
 }
 export default Main;
