@@ -1,13 +1,14 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { withRouter, RouteComponentProps, Link } from "react-router-dom";
 import useLogin from "../../../hooks/useLogin";
 import GetLogin from "../../../hooks/GetLogin";
 import useLogout from "../../../hooks/useLogout";
 import { GoogleLogin, GoogleLoginResponseOffline, GoogleLoginResponse } from 'react-google-login';
+import { FaPlusCircle } from 'react-icons/fa';
 
 import "./Header.css";
 
-const Header:React.FC = () => {
+const Header: React.FC<RouteComponentProps> = ({history}) => {
   const { userInfo, error } = GetLogin();
   const onLogin = useLogin();
   const onLogout = useLogout();
@@ -34,6 +35,15 @@ const Header:React.FC = () => {
       redirectUri="postmessage"
     />
   );
+
+  const handleAdd = () => {
+    history.push("/add");
+  };
+  const addVideoButton = (
+    <div className="header_right_end_container">
+      <FaPlusCircle className="header_hover" onClick={handleAdd} />
+    </div>
+  )
   
   const logoutButton = (
     <div className="header_right_end_container">
@@ -61,11 +71,7 @@ const Header:React.FC = () => {
             {userInfo ? userInfo.nickname : googleLoginButton }
           </div>
         </div>
-        <div className="header_right_end_container">
-          <div>
-            {userInfo ? "영상추가" : ""}
-          </div>
-        </div>    
+        {userInfo ? addVideoButton : null}
         <div className="header_right_end_container">
           <div>
             필터
@@ -80,4 +86,4 @@ const Header:React.FC = () => {
     </div>
     );
 }
-export default Header;
+export default withRouter(Header);
