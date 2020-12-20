@@ -1,6 +1,6 @@
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../modules';
-import { initialize, setValue } from '../modules/addVideo/addVideo';
+import { initialize, setValue, addTag as addTagToRedux, deleteTag as deleteTagToRedux } from '../modules/addVideo/addVideo';
 
 function getVideoId(youtubeUrl: string): string {
   const regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*/;
@@ -31,11 +31,11 @@ const AddVideoHook = () => {
   }
 
   const addTag = (tag: string) => {
-    dispatch(addTag(tag));
+    dispatch(addTagToRedux(tag));
   }
 
   const deleteTag = (tag: string) => {
-    dispatch(deleteTag(tag));
+    dispatch(deleteTagToRedux(tag));
   }
 
   return {

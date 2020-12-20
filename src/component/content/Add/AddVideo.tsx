@@ -1,15 +1,20 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import AddVideoHook from "../../../hooks/AddVideo";
+import { FaTimes } from 'react-icons/fa';
 
 import "./AddVideo.css";
 
 const getYoutubeThumbnailUrl = (id: string) => {
   return `https://img.youtube.com/vi/${id}/0.jpg`;
 }
+const maxTagCount = 5;
 
 const AddVideo: React.FC = () => {
-  const { id, url, title, description, tags, init, setUrl, setTitle, setDescription } = AddVideoHook();
+  const { id, url, title, description, tags, init, setUrl, setTitle, setDescription, addTag, deleteTag } = AddVideoHook();
+  const [tag, setTag] = useState("");
 
+  // mount될 때만 init함수가 실행되도록 하고 싶어서 lint warning을 없앴습니다.
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(init, []);
 
   // TODO: implement debounce
@@ -50,11 +55,45 @@ const AddVideo: React.FC = () => {
     </div>
   );
 
+  const handleTagChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setTag(e.target.value);
+  }
+  const handleTagInput = (e: React.KeyboardEvent) => {
+    if(e.key == "Enter") {
+      if(tag == "") {
+        return;
+      }
+      if(tags.some((val) => (val==tag))) {
+        alert("같은이름의 태그가 존재합니다.");
+        return;
+      }
+      if(tags.length >= maxTagCount) {
+        alert("태그는 5개까지 등록이 가능합니다.");
+        return;
+      }
+      addTag(tag);
+      setTag("");
+    }
+  }
+  const tagsInput = (
+    <div className="add-video-input-container">
+      <span className="badge bg-primary">태그</span>
+      <input name="tags" value={tag} onChange={handleTagChange} onKeyPress={handleTagInput}/>
+    </div>
+  );
+
   return (<div className="add-video-container">
     {urlInput}
     {thumbnailView}
     {titleInput}
     {descriptionInput}
+    {tagsInput}
+    <div>
+      {tags.map((tag, idx) => {
+        return (<div key={idx}>{tag} <FaTimes className="add-video-tag-delete" onClick={()=>{deleteTag(tag)}} /></div>);
+      })}
+    </div>
+    <button>등록</button>
   </div>);
 }
 
