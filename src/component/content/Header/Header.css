@@ -51,3 +51,7 @@
     border-width: 2px;
     border-color: yellow;
 }
+
+.header_hover:hover {
+    cursor: pointer;
+}
