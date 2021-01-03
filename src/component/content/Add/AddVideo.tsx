@@ -71,7 +71,10 @@ const AddVideo: React.FC = () => {
     setTag(e.target.value);
   }
   const handleTagInput = (e: React.KeyboardEvent) => {
-    if(e.key == "Enter") {
+    if(e.key == " ") {
+      e.preventDefault();
+    }
+    if(e.key == "Enter" || e.key == " ") {
       if(tag == "") {
         return;
       }
