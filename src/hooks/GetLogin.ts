@@ -1,4 +1,5 @@
 import { useSelector, useDispatch } from 'react-redux';
+import axios from 'axios';
 import { RootState } from '../modules';
 import { getSavedLoginThunk } from '../modules/auth/authThunk';
 import localStorageService from '../service/localStorageService';
