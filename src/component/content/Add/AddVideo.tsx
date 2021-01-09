@@ -8,6 +8,9 @@ import "./AddVideo.css";
 const getYoutubeThumbnailUrl = (id: string) => {
   return `https://img.youtube.com/vi/${id}/0.jpg`;
 }
+const getThumbnailUrl = (id: string) => {
+  return `https://www.youtube.com/watch?v=${id}`
+}
 const maxTagCount = 5;
 
 const AddVideo: React.FC = () => {
@@ -84,6 +87,11 @@ const AddVideo: React.FC = () => {
       setTag("");
     }
   }
+
+  const setVideo = (id: string) => {
+    setUrl(getThumbnailUrl(id));
+  }
+
   const tagsInput = (
     <div className="add-video-input-container">
       <span className="badge bg-primary">태그</span>
@@ -98,7 +106,7 @@ const AddVideo: React.FC = () => {
   };
 
   return (<div className="add-video-container">
-    <AddVideoModal />
+    <AddVideoModal setVideo={setVideo}/>
     {urlInput}
     {thumbnailView}
     {titleInput}

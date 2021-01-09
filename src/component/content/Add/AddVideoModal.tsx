@@ -13,13 +13,36 @@ enum AddVideoModalCategory {
   SEARCHLIST
 }
 
+type VideoListModalProps = {
+  videos: Array<Video>,
+  handleClose: () => void,
+  setVideo: (id: string) => void,
+};
+
+const VideoListModal: React.FC<VideoListModalProps> = (props) => {
+  const handleClick = (id: string) => {
+    props.setVideo(id);
+    props.handleClose();
+  }
+  return (
+    <div>
+      {props.videos.map((val, idx) => (<div key={idx} onClick={()=>handleClick(val.id)}>{val.title}</div>))}
+    </div>
+  );
+};
+
+
+type AddVideoModalProps = {
+  setVideo: (id: string) => void,
+};
+
 type AddVideoModalState = {
   category: AddVideoModalCategory,
   playLists: Array<PlayList>,
   videos: Array<Video>,
 }
 
-const AddVideoModal: React.FC = () => {
+const AddVideoModal: React.FC<AddVideoModalProps> = (props) => {
   // TODO: handle non-member error
   // const { tokens, error } = GetLogin();
 
@@ -118,14 +141,14 @@ const AddVideoModal: React.FC = () => {
         return (
           <div>
             <FaArrowLeft onClick={backToPlayLists}/>
-            {categoryState.videos.map((val, idx) => (<div key={idx}>{val.snippet.title}</div>))}
+            <VideoListModal videos={categoryState.videos} handleClose={handleClose} setVideo={props.setVideo} />
           </div>
         );
       case AddVideoModalCategory.LIKELIST:
         return (
           <div>
             <FaArrowLeft onClick={initCategoryState}/>
-            {categoryState.videos.map((val, idx) => (<div key={idx}>{val.snippet.title}</div>))}
+            <VideoListModal videos={categoryState.videos} handleClose={handleClose} setVideo={props.setVideo} />
           </div>
         );
       case AddVideoModalCategory.SEARCHLIST:
@@ -133,7 +156,7 @@ const AddVideoModal: React.FC = () => {
           <div>
             <FaArrowLeft onClick={initCategoryState}/>
             <input value={keyword} onChange={handleChangeKeyword}/>
-            {categoryState.videos.map((val, idx) => (<div key={idx}>{val.snippet.title}</div>))}
+            <VideoListModal videos={categoryState.videos} handleClose={handleClose} setVideo={props.setVideo} />
           </div>
         );
     }
