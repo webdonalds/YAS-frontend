@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import AddVideoHook from "../../../hooks/AddVideo";
-import { FaTimes, FaList } from 'react-icons/fa';
 
+import AddVideoModal from "./AddVideoModal";
+import { FaTimes } from 'react-icons/fa';
 import "./AddVideo.css";
 
 const getYoutubeThumbnailUrl = (id: string) => {
@@ -16,13 +17,6 @@ const AddVideo: React.FC = () => {
   // mount될 때만 init함수가 실행되도록 하고 싶어서 lint warning을 없앴습니다.
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(init, []);
-
-  // TODO: 눌렀을 때, 검색창 띄우기
-  const searchButton = (
-    <div className="add-video-input-search-container">
-      <span className="badge bg-secondary add-video-input-search"> <FaList /> 유튜브에서 찾아보기</span>
-    </div>
-  );
 
   // TODO: implement debounce
   const handleUrlChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -104,7 +98,7 @@ const AddVideo: React.FC = () => {
   };
 
   return (<div className="add-video-container">
-    {searchButton}
+    <AddVideoModal />
     {urlInput}
     {thumbnailView}
     {titleInput}

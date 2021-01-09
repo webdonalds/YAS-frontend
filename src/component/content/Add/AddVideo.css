@@ -4,21 +4,6 @@
   margin: 0 auto;
 }
 
-.add-video-input-search-container {
-  width: 100%;
-  text-align: left;
-}
-
-.add-video-input-search {
-  margin-top: 20px;
-  margin-bottom: 15px;
-  font-size: 15px;
-}
-
-.add-video-input-search:hover {
-  cursor: pointer;
-}
-
 .add-video-input-container {
   margin-top: 20px;
   margin-bottom: 20px;
