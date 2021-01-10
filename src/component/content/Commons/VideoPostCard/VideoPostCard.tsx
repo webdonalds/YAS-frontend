@@ -17,6 +17,7 @@ const VideoPostCard: React.FC<videoPostInfo> = ( videoPost ) => {
       <Card.Body>
         <Card.Title>{videoPost.title}</Card.Title>
         <Card.Text>
+          <p>{videoPost.id}</p>
           <p>{videoPost.description}</p>
           <p>{videoPost.createdAt}</p>
           <p>{videoPost.totalLikes}</p>
