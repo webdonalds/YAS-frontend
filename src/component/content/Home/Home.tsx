@@ -2,7 +2,8 @@ import React, { useState, useEffect } from "react";
 import { withRouter, RouteComponentProps } from "react-router-dom";
 import VideoPostCard from "../Commons/VideoPostCard/VideoPostCard";
 import { getRecentVideoPosts, getHotVideoPosts } from '../../../api/home';
-import { Button, Nav } from 'react-bootstrap';
+import { Nav } from 'react-bootstrap';
+import { useBottomScrollListener } from 'react-bottom-scroll-listener';
 
 import "./Home.css";
 
@@ -25,6 +26,11 @@ const Home: React.FC<RouteComponentProps> = () => {
     videoPosts: [],
     pageToken: null
   });
+
+  // Init with recent posts.
+  useEffect(() => {
+    handleRecentVideoPostList(null);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
   
 
   const handleRecentVideoPostList = async (pageToken:number|null) => {
@@ -45,12 +51,7 @@ const Home: React.FC<RouteComponentProps> = () => {
     }
   }
 
-  // Init with recent posts.
-  useEffect(() => {
-    handleRecentVideoPostList(null);
-  }, []);
 
- 
   const handleHotVideoPostList = async () => {
     const response = await getHotVideoPosts();
     
@@ -62,8 +63,8 @@ const Home: React.FC<RouteComponentProps> = () => {
   }
 
 
-
   const loadMoreVideo = () => {
+    console.log("load more");
     switch(videoPostsState.postCategory){
       case VideoPostCategory.RECENT_POSTS:
         handleRecentVideoPostList(videoPostsState.pageToken);
@@ -73,7 +74,9 @@ const Home: React.FC<RouteComponentProps> = () => {
         break;
     }
   }
-  
+
+  // handle end of the scroll : for infinite scroll
+  useBottomScrollListener(loadMoreVideo);
   
   return (
     <div className="home_container">
@@ -94,7 +97,6 @@ const Home: React.FC<RouteComponentProps> = () => {
               totalLikes={post.totalLikes} createdAt={post.createdAt} updatedAt={post.updatedAt} key={post.id}/>
             ))
           }
-          <Button onClick={loadMoreVideo}>test</Button>
         </div>
       </div>
     </div>
