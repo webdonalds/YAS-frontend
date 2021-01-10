@@ -64,7 +64,6 @@ const Home: React.FC<RouteComponentProps> = () => {
 
 
   const loadMoreVideo = () => {
-    console.log("load more");
     switch(videoPostsState.postCategory){
       case VideoPostCategory.RECENT_POSTS:
         handleRecentVideoPostList(videoPostsState.pageToken);
@@ -100,6 +99,6 @@ const Home: React.FC<RouteComponentProps> = () => {
         </div>
       </div>
     </div>
-    );
+  );
 }
 export default withRouter(Home);
