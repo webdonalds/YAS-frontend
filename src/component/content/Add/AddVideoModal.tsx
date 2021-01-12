@@ -1,9 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button, Modal } from 'react-bootstrap';
 import { FaList, FaArrowLeft } from 'react-icons/fa';
 import './AddVideoModal.css';
 
 import { Video, PlayList, getPlayList, getPlayLists, getLikeList, getSearchList } from '../../../api/addVideo';
+import useDebounce from '../../../util/debounce';
+
+const searchDebounceDelay = 500; // ms
 
 enum AddVideoModalCategory {
   NONE,
@@ -103,7 +106,6 @@ const AddVideoModal: React.FC<AddVideoModalProps> = (props) => {
     });
   }
 
-  // TODO: implement debounce
   const handleChangeKeyword = async (e: React.ChangeEvent<HTMLInputElement>) => {
     setKeyword(e.target.value);
     if(e.target.value.length < 2) {
@@ -113,12 +115,20 @@ const AddVideoModal: React.FC<AddVideoModalProps> = (props) => {
       });
       return;
     }
-    const response = await getSearchList(e.target.value);
-    setCategoryState({
-      ...categoryState,
-      videos: response.items,
-    });
   }
+
+  const debounceSearchFromKeyword = useDebounce(keyword, searchDebounceDelay);
+  useEffect(() => {
+    if(keyword.length < 2)  return;
+    const search = async () => {
+      const response = await getSearchList(keyword);
+      setCategoryState({
+        ...categoryState,
+        videos: response.items,
+      });
+    };
+    search();
+  }, [debounceSearchFromKeyword]);
 
   const renderSwitchBody = (state: AddVideoModalState) => {
     switch(state.category) {
