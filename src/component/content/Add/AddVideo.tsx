@@ -5,10 +5,16 @@ import AddVideoModal from "./AddVideoModal";
 import { FaTimes } from 'react-icons/fa';
 import "./AddVideo.css";
 
-const getYoutubeThumbnailUrl = (id: string) => {
-  return `https://img.youtube.com/vi/${id}/0.jpg`;
-}
-const getThumbnailUrl = (id: string) => {
+const getYoutubeiframe = (id: string) => (
+  <iframe src={`https://www.youtube.com/embed/${id}`}
+        frameBorder='0'
+        allow='autoplay; encrypted-media'
+        allowFullScreen
+        title='video'
+        className='add-video-youtube-video'
+  />
+);
+const setYoutubeId = (id: string) => {
   return `https://www.youtube.com/watch?v=${id}`
 }
 const maxTagCount = 5;
@@ -33,7 +39,7 @@ const AddVideo: React.FC = () => {
 
   // is memoization needed?
   const thumbnailView = (id != "") ? (<div className="add-video-thumbnail-container">
-    <img src={getYoutubeThumbnailUrl(id)} />
+    {getYoutubeiframe(id)}
   </div>) : (<div className="add-video-thumbnail-container">
     <div>
       <FaTimes className="add-video-thumbnail-times" />
@@ -88,7 +94,7 @@ const AddVideo: React.FC = () => {
   }
 
   const setVideo = (id: string) => {
-    setUrl(getThumbnailUrl(id));
+    setUrl(setYoutubeId(id));
   }
 
   const tagsInput = (
