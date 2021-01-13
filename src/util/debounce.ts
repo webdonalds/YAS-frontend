@@ -1,8 +1,8 @@
 // ref: https://dev.to/gabe_ragland/debouncing-with-react-hooks-jci
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 
 // Our hook
-export default function useDebounce(value: any, delay: number) {
+export default function useDebounce(value: any, delay: number) { // eslint-disable-line
   // State and setters for debounced value
   const [debouncedValue, setDebouncedValue] = useState(value);
 
@@ -28,6 +28,7 @@ export default function useDebounce(value: any, delay: number) {
     // Only re-call effect if value changes
     // You could also add the "delay" var to inputs array if you ...
     // ... need to be able to change that dynamically.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [value] 
   );
 

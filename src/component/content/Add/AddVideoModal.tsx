@@ -128,6 +128,7 @@ const AddVideoModal: React.FC<AddVideoModalProps> = (props) => {
       });
     };
     search();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [debounceSearchFromKeyword]);
 
   const renderSwitchBody = (state: AddVideoModalState) => {
@@ -170,7 +171,6 @@ const AddVideoModal: React.FC<AddVideoModalProps> = (props) => {
           </div>
         );
     }
-    return null;
   };
 
   const handleClose = () => setShow(false);

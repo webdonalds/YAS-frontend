@@ -24,6 +24,7 @@ const AddVideoHook = () => {
   useEffect(() => {
     const id = getVideoId(url);
     dispatch(setValue('id', id));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [debounceSetIdFromUrl]);
 
   const setUrl = (url: string) => {
