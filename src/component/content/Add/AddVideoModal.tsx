@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Button, Modal } from 'react-bootstrap';
-import { FaList, FaArrowLeft } from 'react-icons/fa';
+import { FaList, FaArrowLeft, FaChevronDown } from 'react-icons/fa';
 import './AddVideoModal.css';
 
 import { Video, PlayList, getPlayList, getPlayLists, getLikeList, getSearchList } from '../../../api/addVideo';
@@ -42,7 +42,10 @@ type AddVideoModalProps = {
 type AddVideoModalState = {
   category: AddVideoModalCategory,
   playLists: Array<PlayList>,
+  playListsNextPageToken: string | undefined,
+  playListId: string,
   videos: Array<Video>,
+  videoNextPageToken: string | undefined,
 }
 
 const AddVideoModal: React.FC<AddVideoModalProps> = (props) => {
@@ -54,7 +57,10 @@ const AddVideoModal: React.FC<AddVideoModalProps> = (props) => {
   const [categoryState, setCategoryState] = useState<AddVideoModalState>({
     category: AddVideoModalCategory.NONE,
     playLists: [],
+    playListsNextPageToken: undefined,
+    playListId: "",
     videos: [],
+    videoNextPageToken: undefined,
   });
 
   const initCategoryState = () => {
@@ -62,40 +68,53 @@ const AddVideoModal: React.FC<AddVideoModalProps> = (props) => {
     setCategoryState({
       category: AddVideoModalCategory.NONE,
       playLists: [],
+      playListsNextPageToken: undefined,
+      playListId: "",
       videos: [],
+      videoNextPageToken: undefined,
     });
   }
 
+  // TODO: handle nextPageToken
   const backToPlayLists = () => setCategoryState({
     ...categoryState,
     category: AddVideoModalCategory.PLAYLISTS,
+    playListId: "",
     videos: [],
+    videoNextPageToken: undefined,
   })
 
-  const handlePlayLists = async () => {
-    const response = await getPlayLists();
+  const handlePlayLists = async (nextPageToken: string | undefined = undefined) => {
+    const response = await getPlayLists(nextPageToken);
     setCategoryState({
       category: AddVideoModalCategory.PLAYLISTS,
-      playLists: response.items,
+      playLists: categoryState.playLists.concat(response.items),
+      playListsNextPageToken: response.nextPageToken,
       videos: [],
+      playListId: "",
+      videoNextPageToken: undefined,
     });
   };
 
-  const handlePlayList = async (playListId: string) => {
-    const response = await getPlayList(playListId);
+  const handlePlayList = async (playListId: string, nextPageToken: string | undefined = undefined) => {
+    const response = await getPlayList(playListId, nextPageToken);
     setCategoryState({
       ...categoryState,
       category: AddVideoModalCategory.PLAYLIST,
-      videos: response.items,
+      videos: categoryState.videos.concat(response.items),
+      playListId: playListId,
+      videoNextPageToken: response.nextPageToken,
     });
   };
 
-  const handleLikeList = async () => {
-    const response = await getLikeList();
+  const handleLikeList = async (nextPageToken: string | undefined = undefined) => {
+    const response = await getLikeList(nextPageToken);
     setCategoryState({
       ...categoryState,
       category: AddVideoModalCategory.LIKELIST,
-      videos: response.items,
+      videos: categoryState.videos.concat(response.items),
+      playListId: "",
+      videoNextPageToken: response.nextPageToken,
     });
   };
 
@@ -103,6 +122,18 @@ const AddVideoModal: React.FC<AddVideoModalProps> = (props) => {
     setCategoryState({
       ...categoryState,
       category: AddVideoModalCategory.SEARCHLIST,
+      videos: [],
+      playListId: "",
+      videoNextPageToken: undefined,
+    });
+  };
+
+  const handleSearch = async (keyword: string, nextPageToken: string | undefined = undefined) => {
+    const response = await getSearchList(keyword, nextPageToken);
+    setCategoryState({
+      ...categoryState,
+      videos: categoryState.videos.concat(response.items),
+      videoNextPageToken: response.nextPageToken,
     });
   }
 
@@ -112,6 +143,7 @@ const AddVideoModal: React.FC<AddVideoModalProps> = (props) => {
       setCategoryState({
         ...categoryState,
         videos: [],
+        videoNextPageToken: undefined,
       });
       return;
     }
@@ -120,25 +152,34 @@ const AddVideoModal: React.FC<AddVideoModalProps> = (props) => {
   const debounceSearchFromKeyword = useDebounce(keyword, searchDebounceDelay);
   useEffect(() => {
     if(keyword.length < 2)  return;
-    const search = async () => {
-      const response = await getSearchList(keyword);
-      setCategoryState({
-        ...categoryState,
-        videos: response.items,
-      });
-    };
-    search();
+    handleSearch(keyword);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [debounceSearchFromKeyword]);
+
+  const nextPageButton = (state: AddVideoModalState) => {
+    if(state.videoNextPageToken == undefined)  return null;
+    switch(state.category) {
+      case AddVideoModalCategory.NONE:
+        return null;
+      case AddVideoModalCategory.PLAYLISTS:
+        return (<div onClick={()=>handlePlayLists(categoryState.videoNextPageToken)}><FaChevronDown /></div>);
+      case AddVideoModalCategory.PLAYLIST:
+        return (<div onClick={()=>handlePlayList(categoryState.playListId, categoryState.videoNextPageToken)}><FaChevronDown /></div>);
+      case AddVideoModalCategory.LIKELIST:
+        return (<div onClick={()=>handleLikeList(categoryState.videoNextPageToken)}><FaChevronDown /></div>);
+      case AddVideoModalCategory.SEARCHLIST:
+        return (<div onClick={()=>handleSearch(keyword, categoryState.videoNextPageToken)}><FaChevronDown/> </div>);
+    }
+  }
 
   const renderSwitchBody = (state: AddVideoModalState) => {
     switch(state.category) {
       case AddVideoModalCategory.NONE:
         return (
           <div>
-            <div onClick={handlePlayLists}>플레이리스트에서 찾기</div>
-            <div onClick={handleLikeList}>좋아요한 목록에서 찾기</div>
-            <div onClick={handleSearchList}>검색해서 찾기</div>
+            <div onClick={() => handlePlayLists()}>플레이리스트에서 찾기</div>
+            <div onClick={() => handleLikeList()}>좋아요한 목록에서 찾기</div>
+            <div onClick={() => handleSearchList()}>검색해서 찾기</div>
           </div>
         );
       case AddVideoModalCategory.PLAYLISTS:
@@ -146,6 +187,7 @@ const AddVideoModal: React.FC<AddVideoModalProps> = (props) => {
           <div>
             <FaArrowLeft onClick={initCategoryState}/>
             {categoryState.playLists.map((val, idx) => (<div key={idx} onClick={() => handlePlayList(val.id)}>{val.snippet.title}</div>))}
+            {nextPageButton(state)}
           </div>
         );
       case AddVideoModalCategory.PLAYLIST:
@@ -153,6 +195,7 @@ const AddVideoModal: React.FC<AddVideoModalProps> = (props) => {
           <div>
             <FaArrowLeft onClick={backToPlayLists}/>
             <VideoListModal videos={categoryState.videos} handleClose={handleClose} setVideo={props.setVideo} />
+            {nextPageButton(state)}
           </div>
         );
       case AddVideoModalCategory.LIKELIST:
@@ -160,6 +203,7 @@ const AddVideoModal: React.FC<AddVideoModalProps> = (props) => {
           <div>
             <FaArrowLeft onClick={initCategoryState}/>
             <VideoListModal videos={categoryState.videos} handleClose={handleClose} setVideo={props.setVideo} />
+            {nextPageButton(state)}
           </div>
         );
       case AddVideoModalCategory.SEARCHLIST:
@@ -168,6 +212,7 @@ const AddVideoModal: React.FC<AddVideoModalProps> = (props) => {
             <FaArrowLeft onClick={initCategoryState}/>
             <input value={keyword} onChange={handleChangeKeyword}/>
             <VideoListModal videos={categoryState.videos} handleClose={handleClose} setVideo={props.setVideo} />
+            {nextPageButton(state)}
           </div>
         );
     }

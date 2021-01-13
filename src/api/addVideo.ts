@@ -20,7 +20,7 @@ type VideosResponse = {
     totalResults: number,
     resultsPerPage: number,
   },
-  nextPageToken: string,
+  nextPageToken: string | undefined,
 };
 
 type PlayListsResponse = {
@@ -29,7 +29,7 @@ type PlayListsResponse = {
     totalResults: number,
     resultsPerPage: number,
   },
-  nextPageToken: string,
+  nextPageToken: string | undefined,
 };
 
 type PlaylistVideo = {
@@ -66,10 +66,10 @@ type AxiosVideoResponse<T> = {
     totalResults: number,
     resultsPerPage: number,
   },
-  nextPageToken: string,
+  nextPageToken: string | undefined,
 };
 
-const getPlayLists = async (pageToken = ""): Promise<PlayListsResponse> => {
+const getPlayLists = async (pageToken: string|undefined = undefined): Promise<PlayListsResponse> => {
   const res = await axios.request<PlayListsResponse>({
     baseURL: API_URL,
     url: '/v1/contents/playlists',
@@ -81,7 +81,7 @@ const getPlayLists = async (pageToken = ""): Promise<PlayListsResponse> => {
   return res.data;
 };
 
-const getPlayList = async (playListId: string, pageToken = ""): Promise<VideosResponse> => {
+const getPlayList = async (playListId: string, pageToken: string|undefined = undefined): Promise<VideosResponse> => {
   const res = await axios.request<AxiosVideoResponse<PlaylistVideo>>({
     baseURL: API_URL,
     url: '/v1/contents/playlist',
@@ -104,7 +104,7 @@ const getPlayList = async (playListId: string, pageToken = ""): Promise<VideosRe
   }
 };
 
-const getLikeList = async (pageToken = ""): Promise<VideosResponse> => {
+const getLikeList = async (pageToken: string|undefined = undefined): Promise<VideosResponse> => {
   const res = await axios.request<AxiosVideoResponse<LikeVideo>>({
     baseURL: API_URL,
     url: '/v1/contents/likelist',
@@ -119,8 +119,6 @@ const getLikeList = async (pageToken = ""): Promise<VideosResponse> => {
     title: val.snippet.title,
     description: val.snippet.description,
   }));
-  console.log(res.data);
-  console.log(videos);
   return {
     items: videos,
     pageInfo: res.data.pageInfo,
@@ -128,7 +126,7 @@ const getLikeList = async (pageToken = ""): Promise<VideosResponse> => {
   }
 };
 
-const getSearchList = async (keyword: string, pageToken = ""): Promise<VideosResponse> => {
+const getSearchList = async (keyword: string, pageToken: string|undefined = undefined): Promise<VideosResponse> => {
   const res = await axios.request<AxiosVideoResponse<SearchVideo>>({
     baseURL: API_URL,
     url: '/v1/contents/search',
