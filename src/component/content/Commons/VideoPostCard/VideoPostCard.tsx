@@ -1,15 +1,13 @@
 import React from "react";
 import { Card } from "react-bootstrap";
+import utils from "../../../../service/utils"
 
 import "./VideoPostCard.css";
 
-const getYoutubeThumbnailUrl = (id: string) => {
-  return `https://img.youtube.com/vi/${id}/0.jpg`;
-}
 
 const VideoPostCard: React.FC<videoPostInfo> = ( videoPost ) => {
 
-  const videoThumbnailUrl = getYoutubeThumbnailUrl(videoPost.videoId);
+  const videoThumbnailUrl = utils.getYoutubeThumbnailUrl(videoPost.videoId);
   
   return (
     <Card style={{ width: '18rem', flexDirection: 'row' }}>

@@ -19,7 +19,7 @@ type videoPostsResponse = {
 const getRecentVideoPosts = async (pageToken:number|null): Promise<videoPostsResponse> => {
     const res = await axios.request<videoPostsResponse>({
         baseURL: API_URL,
-        url: '/v1/post-list/recent-videos',
+        url: '/v1/logoffed-post-list/recent-videos',
         method: 'get',
         params: {
             pageToken: pageToken
@@ -32,7 +32,7 @@ const getRecentVideoPosts = async (pageToken:number|null): Promise<videoPostsRes
 const getHotVideoPosts = async (): Promise<videoPostsResponse> => {
     const res = await axios.request<videoPostsResponse>({
         baseURL: API_URL,
-        url: '/v1/post-list/hot-videos',
+        url: '/v1/logoffed-post-list/hot-videos',
         method: 'get'
     });
     return res.data;
