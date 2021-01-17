@@ -1,0 +1,27 @@
+.home_container{
+    width:100%;
+    min-height: 100px;
+    padding-top: 100px;
+    margin: 0 auto;
+    border-style: solid;
+    border-width: 2px;
+    border-color: red;
+}
+
+.home_content{
+    width: 1000px;
+    min-height: 100px;
+    margin: 0 auto;
+    border-style: solid;
+    border-width: 2px;
+    border-color: green;
+}
+
+.home_video_list_container{
+    width: 100%;
+    min-height: 200px;
+    margin: 0 auto;
+    border-style: solid;
+    border-width: 2px;
+    border-color: brown;
+}
