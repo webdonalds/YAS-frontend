@@ -49,9 +49,6 @@ type AddVideoModalState = {
 }
 
 const AddVideoModal: React.FC<AddVideoModalProps> = (props) => {
-  // TODO: handle non-member error
-  // const { tokens, error } = GetLogin();
-
   const [show, setShow] = useState(false);
   const [keyword, setKeyword] = useState("");
   const [categoryState, setCategoryState] = useState<AddVideoModalState>({

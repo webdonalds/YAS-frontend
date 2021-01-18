@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
 import AddVideoHook from "../../../hooks/AddVideo";
-
 import AddVideoModal from "./AddVideoModal";
+import GetLogin from "../../../hooks/GetLogin";
 import { FaTimes } from 'react-icons/fa';
 import "./AddVideo.css";
+import { Redirect } from "react-router-dom";
 
 const getYoutubeiframe = (id: string) => (
   <iframe src={`https://www.youtube.com/embed/${id}`}
@@ -20,12 +21,18 @@ const setYoutubeId = (id: string) => {
 const maxTagCount = 5;
 
 const AddVideo: React.FC = () => {
+  const { userInfo } = GetLogin();
   const { id, url, title, description, tags, init, setUrl, setTitle, setDescription, addTag, deleteTag } = AddVideoHook();
   const [tag, setTag] = useState("");
 
   // mount될 때만 init함수가 실행되도록 하고 싶어서 lint warning을 없앴습니다.
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(init, []);
+
+  if(userInfo == null) {
+    alert("로그인이 필요한 페이지입니다.");
+    return <Redirect to="/"/>;
+  }
 
   const handleUrlChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setUrl(e.target.value);
