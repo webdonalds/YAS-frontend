@@ -149,9 +149,25 @@ const getSearchList = async (keyword: string, pageToken: string|undefined = unde
   }
 };
 
+const postVideo = async (videoId: string, title: string, description: string, tags: Array<string>): Promise<boolean> => {
+  const res = await axios.request({
+    baseURL: API_URL,
+    url: '/v1/post/video',
+    method: 'post',
+    data: {
+      videoId: videoId,
+      title: title,
+      description: description,
+      tags: tags,
+    },
+  });
+  return res.status == 200;
+}
+
 export {
   getPlayLists,
   getPlayList,
   getLikeList,
   getSearchList,
+  postVideo,
 };
