@@ -1,6 +1,5 @@
 import React from "react";
 import { BrowserRouter, Switch, Route } from "react-router-dom";
-import Login from "./auth/Login";
 import Add from "./content/Add/AddVideo";
 import Header from "./content/Header/Header";
 import Home from "./content/Home/Home";
@@ -15,7 +14,6 @@ const Main: React.FC = () => {
           <Header />
             <Switch>
               <Route path="/" exact={true} component={Home} />
-              <Route path="/login" component={Login} />
               <Route path="/add" component={Add} />
             </Switch>
         </div>
