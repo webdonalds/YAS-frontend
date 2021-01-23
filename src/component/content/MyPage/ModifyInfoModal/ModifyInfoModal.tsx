@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import { Button, Modal, Card } from 'react-bootstrap';
 import { AiFillEdit } from "react-icons/ai";
-import utils from "../../../../service/utils"
+import utils from "../../../../service/utils";
+import { putUserInfo } from "../../../../api/myPage";
 import "./ModifyInfoModal.css";
 
 
@@ -86,10 +87,17 @@ const ModifyInfoModal: React.FC<userData> = (userInfo) => {
     </Card>
   )
 
-  const handleMyInfoModify = () => {
-    
+  const handleMyInfoModify = async () => {
     console.log(userInfoState);
+    const result = await putUserInfo(userInfoState.nickname, userInfoState.aboutMe);
+    
+    if(result.error){
+      alert("정보 수정에 실패했습니다." + result.error.message);
+      return;
+    }
 
+    alert("회원정보가 수정되었습니다.");
+    console.log(result);
   }
 
   const modal = show ? (
@@ -98,7 +106,7 @@ const ModifyInfoModal: React.FC<userData> = (userInfo) => {
         {modifyInfoCard}
       </Modal.Body>
       <Modal.Footer>
-        <Button onClick={handleMyInfoModify}>내 정보 수정하기</Button>
+        <Button onClick={() => handleMyInfoModify()}>내 정보 수정하기</Button>
       </Modal.Footer>
     </Modal>
   ) : null;
