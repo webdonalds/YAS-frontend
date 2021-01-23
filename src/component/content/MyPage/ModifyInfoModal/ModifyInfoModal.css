@@ -1,0 +1,37 @@
+.modify_info_modal_show_button {
+    float: right;
+    margin: 50px 30px;
+    height: 50px;
+    width: 50px;
+    cursor: pointer;
+}
+
+
+.modify_info_card_img { 
+    height:200px;
+    width:200px;
+    border-radius: 50%;
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: cover;
+    object-fit: cover;
+    margin: 0 auto;
+}
+
+
+.modify_info_card_input_container {
+    margin-top: 20px;
+    margin-bottom: 20px;
+  }
+  
+  .modify_info_card_input_container > span {
+    font-size: 15px;
+    width: 20%;
+    margin-right: 10px;
+  }
+  
+  .modify_info_card_input_container > input {
+    font-size: 20px;
+    width: 75%;
+    margin-right: 10px;
+  }
