@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Button, Modal, Card } from 'react-bootstrap';
 import { AiFillEdit } from "react-icons/ai";
-
+import utils from "../../../../service/utils"
 import "./ModifyInfoModal.css";
 
 
@@ -14,11 +14,22 @@ const ModifyInfoModal: React.FC<userData> = (userInfo) => {
     imagePath: userInfo.imagePath ? userInfo.imagePath : ""
   });
 
-  const defaultProfileImage = "https://i.stack.imgur.com/l60Hf.png";
 
+  const initializeUserInfoState = () => {
+    setUserInfo({
+      ...userInfo,
+      nickname: userInfo.nickname ? userInfo.nickname : "",
+      aboutMe: userInfo.aboutMe ? userInfo.aboutMe : "",
+      imagePath: userInfo.imagePath ? userInfo.imagePath : ""
+    })
+  }
+  
 
   const hideModal = () => setShow(false);
-  const showModal = () => setShow(true);
+  const showModal = () => {
+    initializeUserInfoState();
+    setShow(true);
+  }
   
 
   const handleNicknameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -66,7 +77,7 @@ const ModifyInfoModal: React.FC<userData> = (userInfo) => {
 
   const modifyInfoCard = (
     <Card>
-      <Card.Img className="modify_info_card_img" variant="top" src={userInfoState.imagePath ? userInfoState.imagePath : defaultProfileImage}/>
+      <Card.Img className="modify_info_card_img" variant="top" src={userInfoState.imagePath ? userInfoState.imagePath : utils.defaultProfileImage}/>
       <Card.Body>
         {nicknameInput}
         {aboutMeInput}
@@ -76,7 +87,9 @@ const ModifyInfoModal: React.FC<userData> = (userInfo) => {
   )
 
   const handleMyInfoModify = () => {
+    
     console.log(userInfoState);
+
   }
 
   const modal = show ? (
