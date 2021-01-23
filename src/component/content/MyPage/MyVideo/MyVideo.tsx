@@ -1,6 +1,5 @@
-import React, { useState } from "react";
+import React from "react";
 import { withRouter, RouteComponentProps } from "react-router-dom";
-import { Nav } from 'react-bootstrap';
 import "./MyVideo.css";
 
 

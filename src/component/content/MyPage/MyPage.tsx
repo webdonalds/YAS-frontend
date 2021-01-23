@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { withRouter, RouteComponentProps, Redirect } from "react-router-dom";
 import { Nav } from "react-bootstrap";
 import GetLogin from "../../../hooks/GetLogin";
+import utils from "../../../service/utils";
 
 import ModifyInfoModal from "./ModifyInfoModal/ModifyInfoModal"
 import MyVideo from "./MyVideo/MyVideo";
@@ -46,7 +47,7 @@ const MyPage: React.FC<RouteComponentProps> = () => {
 
   const MyInfoCard = (
     <div className="my_page_my_info_card">
-      <img src="https://i.stack.imgur.com/l60Hf.png" alt="test" className="img-thumbnail"/>
+      <img src={userInfo.imagePath ? userInfo.imagePath : utils.defaultProfileImage} alt="test" className="img-thumbnail"/>
       <div className="my_page_my_info_card_content">
         <div>{userInfo.nickname}</div>
         <div>{userInfo.aboutMe}</div>
