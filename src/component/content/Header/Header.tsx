@@ -33,6 +33,11 @@ const Header: React.FC<RouteComponentProps> = ({history}) => {
       onSuccess={handleSuccessLogin}
       onFailure={handleFailureLogin}
       redirectUri="postmessage"
+      scope={[
+        "profile",
+        "email",
+        "https://www.googleapis.com/auth/youtube.readonly",
+      ].join(" ")}
     />
   );
 
