@@ -2,10 +2,8 @@ import axios from 'axios';
 
 export type Video = {
   id: string,
-  snippet: {
-    title: string,
-    description: string,
-  }
+  title: string,
+  description: string,
 };
 
 export type PlayList = {
@@ -22,6 +20,7 @@ type VideosResponse = {
     totalResults: number,
     resultsPerPage: number,
   },
+  nextPageToken: string | undefined,
 };
 
 type PlayListsResponse = {
@@ -30,9 +29,47 @@ type PlayListsResponse = {
     totalResults: number,
     resultsPerPage: number,
   },
+  nextPageToken: string | undefined,
 };
 
-const getPlayLists = async (pageToken = ""): Promise<PlayListsResponse> => {
+type PlaylistVideo = {
+  snippet: {
+    title: string,
+    description: string,
+    resourceId: {
+      videoId: string,
+    },
+  },
+};
+
+type LikeVideo = {
+  id: string,
+  snippet: {
+    title: string,
+    description: string,
+  },
+};
+
+type SearchVideo = {
+  id: {
+    videoId: string,
+  },
+  snippet: {
+    title: string,
+    description: string,
+  },
+};
+
+type AxiosVideoResponse<T> = {
+  items: Array<T>,
+  pageInfo: {
+    totalResults: number,
+    resultsPerPage: number,
+  },
+  nextPageToken: string | undefined,
+};
+
+const getPlayLists = async (pageToken: string|undefined = undefined): Promise<PlayListsResponse> => {
   const res = await axios.request<PlayListsResponse>({
     baseURL: API_URL,
     url: '/v1/contents/playlists',
@@ -44,8 +81,8 @@ const getPlayLists = async (pageToken = ""): Promise<PlayListsResponse> => {
   return res.data;
 };
 
-const getPlayList = async (playListId: string, pageToken = ""): Promise<VideosResponse> => {
-  const res = await axios.request<VideosResponse>({
+const getPlayList = async (playListId: string, pageToken: string|undefined = undefined): Promise<VideosResponse> => {
+  const res = await axios.request<AxiosVideoResponse<PlaylistVideo>>({
     baseURL: API_URL,
     url: '/v1/contents/playlist',
     method: 'get',
@@ -54,11 +91,21 @@ const getPlayList = async (playListId: string, pageToken = ""): Promise<VideosRe
       pageToken: pageToken,
     },
   });
-  return res.data;
+
+  const videos = res.data.items.map(val => ({
+    id: val.snippet.resourceId.videoId,
+    title: val.snippet.title,
+    description: val.snippet.description,
+  }));
+  return {
+    items: videos,
+    pageInfo: res.data.pageInfo,
+    nextPageToken: res.data.nextPageToken,
+  }
 };
 
-const getLikeList = async (pageToken = ""): Promise<VideosResponse> => {
-  const res = await axios.request<VideosResponse>({
+const getLikeList = async (pageToken: string|undefined = undefined): Promise<VideosResponse> => {
+  const res = await axios.request<AxiosVideoResponse<LikeVideo>>({
     baseURL: API_URL,
     url: '/v1/contents/likelist',
     method: 'get',
@@ -66,11 +113,21 @@ const getLikeList = async (pageToken = ""): Promise<VideosResponse> => {
       pageToken: pageToken,
     },
   });
-  return res.data;
+
+  const videos = res.data.items.map(val => ({
+    id: val.id,
+    title: val.snippet.title,
+    description: val.snippet.description,
+  }));
+  return {
+    items: videos,
+    pageInfo: res.data.pageInfo,
+    nextPageToken: res.data.nextPageToken,
+  }
 };
 
-const getSearchList = async (keyword: string, pageToken = ""): Promise<VideosResponse> => {
-  const res = await axios.request<VideosResponse>({
+const getSearchList = async (keyword: string, pageToken: string|undefined = undefined): Promise<VideosResponse> => {
+  const res = await axios.request<AxiosVideoResponse<SearchVideo>>({
     baseURL: API_URL,
     url: '/v1/contents/search',
     method: 'get',
@@ -79,12 +136,38 @@ const getSearchList = async (keyword: string, pageToken = ""): Promise<VideosRes
       pageToken: pageToken,
     },
   });
-  return res.data;
+
+  const videos = res.data.items.map(val => ({
+    id: val.id.videoId,
+    title: val.snippet.title,
+    description: val.snippet.description,
+  }));
+  return {
+    items: videos,
+    pageInfo: res.data.pageInfo,
+    nextPageToken: res.data.nextPageToken,
+  }
 };
+
+const postVideo = async (videoId: string, title: string, description: string, tags: Array<string>): Promise<boolean> => {
+  const res = await axios.request({
+    baseURL: API_URL,
+    url: '/v1/post/video',
+    method: 'post',
+    data: {
+      videoId: videoId,
+      title: title,
+      description: description,
+      tags: tags,
+    },
+  });
+  return res.status == 200;
+}
 
 export {
   getPlayLists,
   getPlayList,
   getLikeList,
   getSearchList,
+  postVideo,
 };
