@@ -6,6 +6,7 @@ import { FaTimes } from 'react-icons/fa';
 import "./AddVideo.css";
 import { Redirect } from "react-router-dom";
 import { postVideo } from "../../../api/addVideo";
+import { maxTagCount, maxTagLength, titleMaxLength, titleMinLength, descriptionMaxLength, tagAllowedPattern } from "../../../constant/Addvideo";
 
 const getYoutubeiframe = (id: string) => (
   <iframe src={`https://www.youtube.com/embed/${id}`}
@@ -19,13 +20,6 @@ const getYoutubeiframe = (id: string) => (
 const setYoutubeId = (id: string) => {
   return `https://www.youtube.com/watch?v=${id}`
 }
-
-const maxTagCount = 5;
-const maxTagLength = 10;
-const titleMaxLength = 100;
-const titleMinLength = 2;
-const descriptionMaxLength = 250;
-const tagAllowedPattern = /^[ㄱ-ㅎ|ㅏ-ㅣ|가-힣|a-zA-Z|0-9]*$/;
 
 const AddVideo: React.FC = () => {
   const { userInfo } = GetLogin();
