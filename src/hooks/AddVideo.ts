@@ -1,6 +1,10 @@
+import { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../modules';
 import { initialize, setValue, addTag as addTagToRedux, deleteTag as deleteTagToRedux } from '../modules/addVideo/addVideo';
+import useDebounce from '../util/debounce';
+
+const searchDebounceDelay = 500; // ms
 
 function getVideoId(youtubeUrl: string): string {
   const regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*/;
@@ -16,10 +20,15 @@ const AddVideoHook = () => {
     dispatch(initialize());
   }
 
-  const setUrl = (url: string) => {
+  const debounceSetIdFromUrl = useDebounce(url, searchDebounceDelay);
+  useEffect(() => {
     const id = getVideoId(url);
-    dispatch(setValue('url', url));
     dispatch(setValue('id', id));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [debounceSetIdFromUrl]);
+
+  const setUrl = (url: string) => {
+    dispatch(setValue('url', url));
   };
 
   const setTitle = (title: string) => {
