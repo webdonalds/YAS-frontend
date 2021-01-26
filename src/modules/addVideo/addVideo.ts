@@ -73,7 +73,13 @@ const addVideo = createReducer<AddVideoState, AddVideoAction>(initialState, {
     ...state,
     [action.payload.name]: action.payload.value,
   }),
-  [INITIALIZE]: () => initialState
+  [INITIALIZE]: () => ({
+    id: "",
+    url: "",
+    title: "",
+    description: "",
+    tags: [],
+  }),
 });
 
 export default addVideo;

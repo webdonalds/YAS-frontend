@@ -26,16 +26,19 @@ const Header: React.FC<RouteComponentProps> = ({history}) => {
   }
 
   const googleLoginButton = (
-    <div className="header_right_end_container">
-      <GoogleLogin
-        clientId={GOOGLE_CLIENT_ID}
-        buttonText="Login"
-        responseType="code"
-        onSuccess={handleSuccessLogin}
-        onFailure={handleFailureLogin}
-        redirectUri="postmessage"
-      />
-    </div>
+    <GoogleLogin
+      clientId={GOOGLE_CLIENT_ID}
+      buttonText="Login"
+      responseType="code"
+      onSuccess={handleSuccessLogin}
+      onFailure={handleFailureLogin}
+      redirectUri="postmessage"
+      scope={[
+        "profile",
+        "email",
+        "https://www.googleapis.com/auth/youtube.readonly",
+      ].join(" ")}
+    />
   );
 
   const handleMyPage = () => {
