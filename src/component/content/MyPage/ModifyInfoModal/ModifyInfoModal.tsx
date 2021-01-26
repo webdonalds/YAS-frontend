@@ -88,16 +88,14 @@ const ModifyInfoModal: React.FC<userData> = (userInfo) => {
   )
 
   const handleMyInfoModify = async () => {
-    console.log(userInfoState);
     const result = await putUserInfo(userInfoState.nickname, userInfoState.aboutMe);
-    
-    if(result.error){
+
+    if('error' in result){
       alert("정보 수정에 실패했습니다." + result.error.message);
       return;
     }
 
     alert("회원정보가 수정되었습니다.");
-    console.log(result);
   }
 
   const modal = show ? (

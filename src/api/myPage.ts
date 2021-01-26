@@ -13,9 +13,9 @@ type errorResponse = {
     }
 }
 
-const putUserInfo = async (nickname:string, aboutMe:string|null): Promise<any>=> {
+const putUserInfo = async (nickname:string, aboutMe:string|null): Promise<errorResponse | putUserInfoResponse>=> {
     try{
-        const res = await axios.request<putUserInfoResponse>({
+        const res = await axios.request<errorResponse | putUserInfoResponse>({
             baseURL: API_URL,
             url: '/v1/user/user-info',
             method: 'put',
@@ -25,9 +25,9 @@ const putUserInfo = async (nickname:string, aboutMe:string|null): Promise<any>=>
             }
         });
         
-        return res.data as putUserInfoResponse;
+        return res.data;
     } catch(error){
-        return error.response.data as errorResponse;
+        return <errorResponse> error.response.data;
     }
 }
 
