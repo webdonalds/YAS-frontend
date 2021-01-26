@@ -6,9 +6,9 @@ import { putUserInfo } from "../../../../api/myPage";
 import "./ModifyInfoModal.css";
 
 
-const ModifyInfoModal: React.FC<userData> = (userInfo) => {
+const ModifyInfoModal: React.FC<UserData> = (userInfo) => {
   const [show, setShow] = useState(false);
-  const [userInfoState, setUserInfo] = useState<userData>({
+  const [userInfoState, setUserInfo] = useState<UserData>({
     ...userInfo,
     nickname: userInfo.nickname ? userInfo.nickname : "",
     aboutMe: userInfo.aboutMe ? userInfo.aboutMe : "",
