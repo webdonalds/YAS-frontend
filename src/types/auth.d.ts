@@ -1,4 +1,4 @@
-type userData = {
+type UserData = {
   id: number,
   email: string,
   nickname: string,
@@ -7,7 +7,7 @@ type userData = {
 };
 
 type userLoginInfo = {
-  userInfo: userData,
+  userInfo: UserData,
   tokens: tokens
 };
 

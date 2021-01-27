@@ -7,6 +7,7 @@ import localStorageService from "../service/localStorageService";
 import Add from "./content/Add/AddVideo";
 import Header from "./content/Header/Header";
 import Home from "./content/Home/Home";
+import MyPage from "./content/MyPage/MyPage";
 
 import "./Main.css";
 
@@ -40,6 +41,7 @@ const Main: React.FC = () => {
             <Switch>
               <Route path="/" exact={true} component={Home} />
               <Route path="/add" component={Add} />
+              <Route path="/my-page" component={MyPage} />
             </Switch>
         </div>
       </div>

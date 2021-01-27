@@ -16,7 +16,7 @@ type LoginErrorResponse = {
 export const loginRequest = createAction(LOGIN_REQUEST)();
 export const loginSuccess = createAction(
   LOGIN_SUCCESS,
-  (userInfo: userData, tokens: tokens) => {
+  (userInfo: UserData, tokens: tokens) => {
     return {
       userInfo: userInfo,
       tokens: tokens
@@ -35,7 +35,7 @@ export type AuthAction = ActionType<typeof actions>;
 
 // State
 type AuthState = {
-  userInfo: userData | null,
+  userInfo: UserData | null,
   tokens: tokens | null,
   error: LoginErrorResponse | null,
 }

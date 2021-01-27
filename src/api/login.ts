@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 type AuthTokenResponse = {
-  data: userData,
+  data: UserData,
   auth: tokens,
 };
 

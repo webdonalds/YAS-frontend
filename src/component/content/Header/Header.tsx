@@ -41,14 +41,27 @@ const Header: React.FC<RouteComponentProps> = ({history}) => {
     />
   );
 
+  const handleMyPage = () => {
+    history.push("/my-page");
+  }
+
+  const myInfoBlock = (
+    <div className="header_right_end_container">
+      <div className="header_hover" onClick={handleMyPage}>{userInfo ? userInfo.nickname : ""}</div>
+    </div>
+  )
+  
+ 
   const handleAdd = () => {
     history.push("/add");
   };
+
   const addVideoButton = (
     <div className="header_right_end_container">
       <FaPlusCircle className="header_hover" onClick={handleAdd} />
     </div>
   )
+
   
   const logoutButton = (
     <div className="header_right_end_container">
@@ -70,13 +83,9 @@ const Header: React.FC<RouteComponentProps> = ({history}) => {
         </div>
 
         {userInfo ? logoutButton : null}
-      
-        <div className="header_right_end_container">
-          <div>
-            {userInfo ? userInfo.nickname : googleLoginButton }
-          </div>
-        </div>
+        {userInfo ? myInfoBlock : googleLoginButton }
         {userInfo ? addVideoButton : null}
+        
         <div className="header_right_end_container">
           <div>
             필터
