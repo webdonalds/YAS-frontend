@@ -6,16 +6,10 @@ type putUserInfoResponse = {
     aboutMe: string | null
 }
 
-type errorResponse = {
-    error: {
-        message: string,
-        specific: string | null
-    }
-}
 
-const putUserInfo = async (nickname:string, aboutMe:string|null): Promise<errorResponse | putUserInfoResponse>=> {
+const putUserInfo = async (nickname:string, aboutMe:string|null): Promise<ErrorResponse | putUserInfoResponse>=> {
     try{
-        const res = await axios.request<errorResponse | putUserInfoResponse>({
+        const res = await axios.request<ErrorResponse | putUserInfoResponse>({
             baseURL: API_URL,
             url: '/v1/user/user-info',
             method: 'put',
@@ -27,7 +21,7 @@ const putUserInfo = async (nickname:string, aboutMe:string|null): Promise<errorR
         
         return res.data;
     } catch(error){
-        return <errorResponse> error.response.data;
+        return <ErrorResponse> error.response.data;
     }
 }
 
