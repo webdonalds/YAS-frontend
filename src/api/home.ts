@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-export type videoPostInfo = {
+export type VideoPostInfo = {
     id: number,
     videoId: string,
     userId: number,
@@ -11,13 +11,13 @@ export type videoPostInfo = {
     updatedAt: string
 };
 
-type videoPostsResponse = {
-    videoList: Array<videoPostInfo>,
+type VideoPostsResponse = {
+    videoList: Array<VideoPostInfo>,
     pageToken: number|null
 }
 
-const getRecentVideoPosts = async (pageToken:number|null): Promise<videoPostsResponse> => {
-    const res = await axios.request<videoPostsResponse>({
+const getRecentVideoPosts = async (pageToken:number|null): Promise<VideoPostsResponse> => {
+    const res = await axios.request<VideoPostsResponse>({
         baseURL: API_URL,
         url: '/v1/logoffed-post-list/recent-videos',
         method: 'get',
@@ -29,8 +29,8 @@ const getRecentVideoPosts = async (pageToken:number|null): Promise<videoPostsRes
 }
 
 
-const getHotVideoPosts = async (): Promise<videoPostsResponse> => {
-    const res = await axios.request<videoPostsResponse>({
+const getHotVideoPosts = async (): Promise<VideoPostsResponse> => {
+    const res = await axios.request<VideoPostsResponse>({
         baseURL: API_URL,
         url: '/v1/logoffed-post-list/hot-videos',
         method: 'get'

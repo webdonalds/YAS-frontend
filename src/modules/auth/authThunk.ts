@@ -32,7 +32,7 @@ const logoutThunk = (): ThunkAction<void, RootState, null, AuthAction> => {
 }
 
 
-const getSavedLoginThunk = (userToken: tokens): ThunkAction<void, RootState, null, AuthAction> => {
+const getSavedLoginThunk = (userToken: Tokens): ThunkAction<void, RootState, null, AuthAction> => {
   return async (dispatch) => {
     axios.defaults.headers.common['x-access-token'] = userToken.yasAccessToken;
     

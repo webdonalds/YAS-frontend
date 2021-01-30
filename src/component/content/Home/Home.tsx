@@ -15,7 +15,7 @@ enum VideoPostCategory {
 
 type VideoPostsState = {
   postCategory: VideoPostCategory,
-  videoPosts: Array<videoPostInfo>
+  videoPosts: Array<VideoPostInfo>
   pageToken: number|null
 }
 

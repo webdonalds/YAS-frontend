@@ -1,16 +1,16 @@
 const userTokenKey = "userTokenKey";
 
-function getUserTokenFromLocalStorage(): tokens | null {
+function getUserTokenFromLocalStorage(): Tokens | null {
     const userToken = localStorage.getItem(userTokenKey);
     if(userToken == null){
         return null;
     }
 
-    const ret:tokens = JSON.parse(userToken);
-    return ret as tokens;
+    const ret:Tokens = JSON.parse(userToken);
+    return ret as Tokens;
 }
 
-function setUserTokenToLocalStorage(data:tokens): void{
+function setUserTokenToLocalStorage(data:Tokens): void{
     localStorage.setItem(userTokenKey, JSON.stringify(data));
 }
 

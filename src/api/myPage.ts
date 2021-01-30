@@ -1,15 +1,15 @@
 import axios from 'axios';
 
 
-type putUserInfoResponse = {
+type PutUserInfoResponse = {
     nickname: string,
     aboutMe: string | null
 }
 
 
-const putUserInfo = async (nickname:string, aboutMe:string|null): Promise<ErrorResponse | putUserInfoResponse>=> {
+const putUserInfo = async (nickname:string, aboutMe:string|null): Promise<ErrorResponse | PutUserInfoResponse>=> {
     try{
-        const res = await axios.request<ErrorResponse | putUserInfoResponse>({
+        const res = await axios.request<ErrorResponse | PutUserInfoResponse>({
             baseURL: API_URL,
             url: '/v1/user/user-info',
             method: 'put',

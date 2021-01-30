@@ -2,11 +2,11 @@ import axios from 'axios';
 
 type AuthTokenResponse = {
   data: UserData,
-  auth: tokens,
+  auth: Tokens,
 };
 
 
-const getAuthToken = async (code: string): Promise<userLoginInfo> => {
+const getAuthToken = async (code: string): Promise<UserLoginInfo> => {
   const res = await axios.request<AuthTokenResponse>({
     baseURL: API_URL,
     url: '/v1/auth/login',
