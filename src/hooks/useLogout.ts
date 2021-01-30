@@ -7,7 +7,7 @@ const useLogout = () => {
   const dispatch = useDispatch();
 
   const onLogout = useCallback(() => {
-      localStorageService.eraseUserLoginInfoInLocalStorage();
+      localStorageService.deleteUserTokenInLocalStorage();
       dispatch(logoutThunk())
   }, [dispatch]);
 

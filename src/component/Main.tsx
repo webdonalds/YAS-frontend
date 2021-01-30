@@ -21,10 +21,10 @@ const Main: React.FC = () => {
     // if not initialized
     if(!initialized) {
       if(userInfo==null && tokens==null && error==null) {
-        const savedUserLoginInfo = localStorageService.getUserLoginInfoFromLocalStorage();
+        const savedUserToken = localStorageService.getUserTokenFromLocalStorage();
 
-        if(savedUserLoginInfo!=null){
-          dispatch(getSavedLoginThunk(savedUserLoginInfo));
+        if(savedUserToken!=null){
+          dispatch(getSavedLoginThunk(savedUserToken));
         }
       }
       setInitialized(true);
