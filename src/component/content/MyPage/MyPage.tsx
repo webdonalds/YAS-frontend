@@ -4,6 +4,7 @@ import { Nav } from "react-bootstrap";
 import GetLogin from "../../../hooks/GetLogin";
 import utils from "../../../service/utils";
 import { getMyVideos } from '../../../api/myPage';
+import { useBottomScrollListener } from 'react-bottom-scroll-listener';
 
 import ModifyInfoModal from "./ModifyInfoModal/ModifyInfoModal"
 import VideoPostCard from '../Commons/VideoPostCard/VideoPostCard';
@@ -42,7 +43,20 @@ const MyPage: React.FC<RouteComponentProps> = () => {
     handleMyVideo(null);
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-  
+
+  const loadMoreVideo = () => {
+    switch(myPageState.myPageCategory){
+      case MyPageCategory.MY_VIDEO:
+        handleMyVideo(myVideosState.pageToken);
+        break;
+      default:
+        break;
+    }
+  }
+
+  // handle end of the scroll
+  useBottomScrollListener(loadMoreVideo);
+
   if(userInfo == null) {
     alert("로그인이 필요한 페이지입니다.");
     return <Redirect to="/"/>;
@@ -106,7 +120,6 @@ const MyPage: React.FC<RouteComponentProps> = () => {
   const handleMyFollower = () => setMyPageState({myPageCategory: MyPageCategory.MY_FOLLOWER});
 
   const handleMyFollowee = () => setMyPageState({myPageCategory: MyPageCategory.MY_FOLLOWEE});
-
 
   return (
     <div className="my_page_container">
