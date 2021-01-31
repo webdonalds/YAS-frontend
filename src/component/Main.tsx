@@ -3,7 +3,6 @@ import { useDispatch } from "react-redux";
 import { BrowserRouter, Switch, Route } from "react-router-dom";
 import GetLogin from "../hooks/GetLogin";
 import { getSavedLoginThunk } from "../modules/auth/authThunk";
-import localStorageService from "../service/localStorageService";
 import Add from "./content/Add/AddVideo";
 import Header from "./content/Header/Header";
 import Home from "./content/Home/Home";
@@ -21,11 +20,7 @@ const Main: React.FC = () => {
     // if not initialized
     if(!initialized) {
       if(userInfo==null && tokens==null && error==null) {
-        const savedUserToken = localStorageService.getUserTokenFromLocalStorage();
-
-        if(savedUserToken!=null){
-          dispatch(getSavedLoginThunk(savedUserToken));
-        }
+        dispatch(getSavedLoginThunk());
       }
       setInitialized(true);
     }

@@ -7,7 +7,6 @@ import utils from "../../../../service/utils";
 import { putUserInfo } from "../../../../api/myPage";
 import "./ModifyInfoModal.css";
 import { getSavedLoginThunk } from "../../../../modules/auth/authThunk";
-import localStorageService from "../../../../service/localStorageService";
 
 const ModifyInfoModal: React.FC<UserData> = (userInfo) => {
   const [show, setShow] = useState(false);
@@ -100,12 +99,8 @@ const ModifyInfoModal: React.FC<UserData> = (userInfo) => {
     }
 
     alert("정보 수정에 성공했습니다.");
+    dispatch(getSavedLoginThunk());
     
-    const savedUserToken = localStorageService.getUserTokenFromLocalStorage();
-    if(savedUserToken!=null){
-      dispatch(getSavedLoginThunk(savedUserToken));
-    }
-
     setShow(false);
     return <Redirect to="/my-page"/>;
   }

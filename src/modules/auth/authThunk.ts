@@ -32,9 +32,15 @@ const logoutThunk = (): ThunkAction<void, RootState, null, AuthAction> => {
 }
 
 
-const getSavedLoginThunk = (userToken: Tokens): ThunkAction<void, RootState, null, AuthAction> => {
+const getSavedLoginThunk = (): ThunkAction<void, RootState, null, AuthAction> => {
   return async (dispatch) => {
-    axios.defaults.headers.common['x-access-token'] = userToken.yasAccessToken;
+    const savedUserToken = localStorageService.getUserTokenFromLocalStorage();
+
+    if(savedUserToken==null){
+      return;
+    }
+  
+    axios.defaults.headers.common['x-access-token'] = savedUserToken.yasAccessToken;
     
     const userInfo = await getUserInfo();
 
@@ -43,7 +49,7 @@ const getSavedLoginThunk = (userToken: Tokens): ThunkAction<void, RootState, nul
       console.log(userInfo.error.message);
       dispatch(logoutRequest());
     } else{
-      dispatch(loginSuccess(userInfo, userToken));
+      dispatch(loginSuccess(userInfo, savedUserToken));
     }
   }
 }
