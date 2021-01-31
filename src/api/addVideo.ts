@@ -149,6 +149,16 @@ const getSearchList = async (keyword: string, pageToken: string|undefined = unde
   }
 };
 
+// TODO: error handling
+const getVideo = async (postId: string): Promise<VideoPostInfo> => {
+  const res = await axios.request({
+    baseURL: API_URL,
+    url: `/v1/post/video/${postId}`,
+    method: 'get'
+  });
+  return res.data;
+}
+
 const postVideo = async (videoId: string, title: string, description: string, tags: Array<string>): Promise<boolean> => {
   const res = await axios.request({
     baseURL: API_URL,
@@ -164,10 +174,40 @@ const postVideo = async (videoId: string, title: string, description: string, ta
   return res.status == 200;
 }
 
+const modifyVideo = async (postId: string, title: string, description: string, tags: Array<string>): Promise<boolean> => {
+  const res = await axios.request({
+    baseURL: API_URL,
+    url: '/v1/post/video',
+    method: 'put',
+    data: {
+      videoPostId: postId,
+      title: title,
+      description: description,
+      tags: tags,
+    },
+  });
+  return res.status == 200;
+}
+
+const deleteVideo = async (postId: string): Promise<boolean> => {
+  const res = await axios.request({
+    baseURL: API_URL,
+    url: '/v1/post/video',
+    method: 'delete',
+    data: {
+      videoPostId: postId
+    },
+  });
+  return res.status == 200;
+}
+
 export {
   getPlayLists,
   getPlayList,
   getLikeList,
   getSearchList,
+  getVideo,
   postVideo,
+  modifyVideo,
+  deleteVideo
 };

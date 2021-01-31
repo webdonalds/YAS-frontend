@@ -1,4 +1,4 @@
-type UserData = {
+declare type UserData = {
   id: number,
   email: string,
   nickname: string,
@@ -6,12 +6,12 @@ type UserData = {
   aboutMe: string
 };
 
-type UserLoginInfo = {
+declare type UserLoginInfo = {
   userInfo: UserData,
   tokens: Tokens
 };
 
-type Tokens = {
+declare type Tokens = {
   yasAccessToken: string,
   yasRefreshToken: string
 };

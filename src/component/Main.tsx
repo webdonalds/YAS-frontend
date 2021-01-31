@@ -3,7 +3,8 @@ import { useDispatch } from "react-redux";
 import { BrowserRouter, Switch, Route } from "react-router-dom";
 import GetLogin from "../hooks/GetLogin";
 import { getSavedLoginThunk } from "../modules/auth/authThunk";
-import Add from "./content/Add/AddVideo";
+import localStorageService from "../service/localStorageService";
+import AddVideo from "./content/Add/AddVideo";
 import Header from "./content/Header/Header";
 import Home from "./content/Home/Home";
 import MyPage from "./content/MyPage/MyPage";
@@ -35,8 +36,9 @@ const Main: React.FC = () => {
           <Header />
             <Switch>
               <Route path="/" exact={true} component={Home} />
-              <Route path="/add" component={Add} />
               <Route path="/my-page" component={MyPage} />
+              <Route path="/add-video" render={({match}) => <AddVideo isUpdate={false} match={match} />} />
+              <Route path="/modify-video/:postId" render={({match}) => <AddVideo isUpdate={true} match={match} />} />
             </Switch>
         </div>
       </div>
