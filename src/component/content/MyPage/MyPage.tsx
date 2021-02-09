@@ -70,7 +70,7 @@ const MyPage: React.FC<RouteComponentProps> = () => {
         return (
           myVideosState.myVideos.map(post => (
             <VideoPostCard id={post.id} title={post.title} userId={post.userId} videoId={post.videoId} description={post.description} 
-            totalLikes={post.totalLikes} createdAt={post.createdAt} updatedAt={post.updatedAt} key={post.id}/>
+            totalLikes={post.totalLikes} createdAt={post.createdAt} updatedAt={post.updatedAt} key={post.id} tags={[]}/>
           ))
         );
       case MyPageCategory.MY_FOLLOWER:
