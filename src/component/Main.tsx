@@ -28,17 +28,23 @@ const Main: React.FC = () => {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(initialize, [initialized]);
 
+  const bodyComponent = initialized ? (
+    <>
+      <Switch>
+        <Route path="/" exact={true} component={Home} />
+        <Route path="/my-page" component={MyPage} />
+        <Route path="/add-video" render={({match}) => <AddVideo isUpdate={false} match={match} />} />
+        <Route path="/modify-video/:postId" render={({match}) => <AddVideo isUpdate={true} match={match} />} />
+      </Switch>
+    </>
+  ) : null;
+
   return (
     <BrowserRouter>
       <div className="full_main_page container">
         <div className="inner_main_page">
           <Header />
-            <Switch>
-              <Route path="/" exact={true} component={Home} />
-              <Route path="/my-page" component={MyPage} />
-              <Route path="/add-video" render={({match}) => <AddVideo isUpdate={false} match={match} />} />
-              <Route path="/modify-video/:postId" render={({match}) => <AddVideo isUpdate={true} match={match} />} />
-            </Switch>
+          {bodyComponent}
         </div>
       </div>
     </BrowserRouter>
