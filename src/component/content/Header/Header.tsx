@@ -53,7 +53,7 @@ const Header: React.FC<RouteComponentProps> = ({history}) => {
   
  
   const handleAdd = () => {
-    history.push("/add");
+    history.push("/add-video");
   };
 
   const addVideoButton = (
