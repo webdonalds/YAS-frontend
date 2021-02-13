@@ -40,14 +40,14 @@ const MyPage: React.FC<RouteComponentProps> = () => {
 
   // Init my videos
   useEffect(() => {
-    handleMyVideo(null);
+    loadMyVideo(null);
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
 
   const loadMoreVideo = () => {
     switch(myPageState.myPageCategory){
       case MyPageCategory.MY_VIDEO:
-        handleMyVideo(myVideosState.pageToken);
+        loadMyVideo(myVideosState.pageToken);
         break;
       default:
         break;
@@ -94,7 +94,7 @@ const MyPage: React.FC<RouteComponentProps> = () => {
   )
 
 
-  const handleMyVideo = async (pageToken:number|null) => {
+  const loadMyVideo = async (pageToken:number|null) => {
     setMyPageState({myPageCategory: MyPageCategory.MY_VIDEO});
     const response = await getMyVideos(userInfo.id, pageToken);
 
@@ -127,7 +127,7 @@ const MyPage: React.FC<RouteComponentProps> = () => {
         {MyInfoCard}
         <Nav variant="pills" defaultActiveKey="my_video">
           <Nav.Item>
-            <Nav.Link eventKey="my_video" onClick={() => {handleMyVideo(myVideosState.pageToken)}}>내 영상</Nav.Link>
+            <Nav.Link eventKey="my_video" onClick={() => {loadMyVideo(myVideosState.pageToken)}}>내 영상</Nav.Link>
           </Nav.Item>
           <Nav.Item>
             <Nav.Link eventKey="my_follower" onClick={handleMyFollower}>팔로워</Nav.Link>

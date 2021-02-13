@@ -46,7 +46,7 @@ const getSavedLoginThunk = (): ThunkAction<void, RootState, null, AuthAction> =>
 
     // if api call fails
     if('error' in userInfo){
-      console.log(userInfo.error.message);
+      alert("Logouted. Please re-login");
       dispatch(logoutRequest());
     } else{
       dispatch(loginSuccess(userInfo, savedUserToken));
