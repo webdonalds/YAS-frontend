@@ -55,3 +55,11 @@
     margin: 20px 0px;
 }
 
+.my_page_content_container{
+    width: 100%;
+    min-height: 200px;
+    margin: 0 auto;
+    border-style: solid;
+    border-width: 2px;
+    border-color: brown;
+}

@@ -1,27 +1,26 @@
+const userTokenKey = "userTokenKey";
 
-const userLoginInfoKey = "userLoginInfo";
-
-
-function getUserLoginInfoFromLocalStorage(): userLoginInfo | null {
-    const userLoginInfoString = localStorage.getItem(userLoginInfoKey);
-    if(userLoginInfoString == null) {
+function getUserTokenFromLocalStorage(): Tokens | null {
+    const userToken = localStorage.getItem(userTokenKey);
+    if(userToken == null){
         return null;
     }
-    const ret:userLoginInfo = JSON.parse(userLoginInfoString);
-    return ret as userLoginInfo;
+
+    const ret:Tokens = JSON.parse(userToken);
+    return ret as Tokens;
 }
 
-function setUserLoginInfoToLocalStorage(data:userLoginInfo): void{
-    localStorage.setItem(userLoginInfoKey, JSON.stringify(data));
+function setUserTokenToLocalStorage(data:Tokens): void{
+    localStorage.setItem(userTokenKey, JSON.stringify(data));
 }
 
-function eraseUserLoginInfoInLocalStorage(): void {
-    localStorage.removeItem(userLoginInfoKey);
+function deleteUserTokenInLocalStorage(): void {
+    localStorage.removeItem(userTokenKey);
 }
 
 
 export default {
-    getUserLoginInfoFromLocalStorage,
-    setUserLoginInfoToLocalStorage,
-    eraseUserLoginInfoInLocalStorage
+    getUserTokenFromLocalStorage,
+    setUserTokenToLocalStorage,
+    deleteUserTokenInLocalStorage
 };

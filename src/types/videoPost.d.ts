@@ -1,4 +1,4 @@
-type videoPostInfo = {
+type VideoPostInfo = {
     id: number,
     videoId: string,
     userId: number,

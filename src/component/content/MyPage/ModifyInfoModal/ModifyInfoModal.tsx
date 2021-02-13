@@ -1,10 +1,12 @@
 import React, { useState } from "react";
+import { useDispatch } from "react-redux";
+import { Redirect } from "react-router-dom";
 import { Button, Modal, Card } from 'react-bootstrap';
 import { AiFillEdit } from "react-icons/ai";
 import utils from "../../../../service/utils";
 import { putUserInfo } from "../../../../api/myPage";
 import "./ModifyInfoModal.css";
-
+import { getSavedLoginThunk } from "../../../../modules/auth/authThunk";
 
 const ModifyInfoModal: React.FC<UserData> = (userInfo) => {
   const [show, setShow] = useState(false);
@@ -15,6 +17,7 @@ const ModifyInfoModal: React.FC<UserData> = (userInfo) => {
     imagePath: userInfo.imagePath ? userInfo.imagePath : ""
   });
 
+  const dispatch = useDispatch();
 
   const initializeUserInfoState = () => {
     setUserInfo({
@@ -95,7 +98,11 @@ const ModifyInfoModal: React.FC<UserData> = (userInfo) => {
       return;
     }
 
-    alert("회원정보가 수정되었습니다.");
+    alert("정보 수정에 성공했습니다.");
+    dispatch(getSavedLoginThunk());
+    
+    setShow(false);
+    return <Redirect to="/my-page"/>;
   }
 
   const modal = show ? (

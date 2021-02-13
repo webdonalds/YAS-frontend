@@ -5,7 +5,7 @@ import utils from "../../../../service/utils"
 import "./VideoPostCard.css";
 
 
-const VideoPostCard: React.FC<videoPostInfo> = ( videoPost ) => {
+const VideoPostCard: React.FC<VideoPostInfo> = ( videoPost ) => {
 
   const videoThumbnailUrl = utils.getYoutubeThumbnailUrl(videoPost.videoId);
   

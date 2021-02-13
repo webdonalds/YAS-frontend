@@ -6,12 +6,12 @@ type UserData = {
   aboutMe: string
 };
 
-type userLoginInfo = {
+type UserLoginInfo = {
   userInfo: UserData,
-  tokens: tokens
+  tokens: Tokens
 };
 
-type tokens = {
+type Tokens = {
   yasAccessToken: string,
   yasRefreshToken: string
 };
