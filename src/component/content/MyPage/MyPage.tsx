@@ -83,13 +83,13 @@ const MyPage: React.FC<RouteComponentProps> = () => {
 
   const MyInfoCard = (
     <div className="my_page_my_info_card">
-      <img src={userInfo.imagePath ? userInfo.imagePath : utils.defaultProfileImage} alt="test" className="img-thumbnail"/>
+      <img src={userInfo.imageFile ? URL.createObjectURL(userInfo.imageFile) : utils.defaultProfileImage} alt="test" className="img-thumbnail"/>
       <div className="my_page_my_info_card_content">
         <div>{userInfo.nickname}</div>
         <div>{userInfo.aboutMe}</div>
       </div>
       <ModifyInfoModal id={userInfo.id} email={userInfo.email} nickname={userInfo.nickname} 
-      imagePath={userInfo.imagePath} aboutMe={userInfo.aboutMe}/>
+      imageFile={userInfo.imageFile} aboutMe={userInfo.aboutMe}/>
     </div>
   )
 

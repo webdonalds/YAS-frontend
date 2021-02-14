@@ -2,7 +2,7 @@ type UserData = {
   id: number,
   email: string,
   nickname: string,
-  imagePath: string,
+  imageFile: File | null,
   aboutMe: string
 };
 
