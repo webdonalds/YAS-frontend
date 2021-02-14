@@ -14,7 +14,7 @@ const ModifyInfoModal: React.FC<UserData> = (userInfo) => {
     ...userInfo,
     nickname: userInfo.nickname ? userInfo.nickname : "",
     aboutMe: userInfo.aboutMe ? userInfo.aboutMe : "",
-    imagePath: userInfo.imagePath ? userInfo.imagePath : ""
+    imageFile: userInfo.imageFile ? userInfo.imageFile : null
   });
 
   const dispatch = useDispatch();
@@ -24,7 +24,7 @@ const ModifyInfoModal: React.FC<UserData> = (userInfo) => {
       ...userInfo,
       nickname: userInfo.nickname ? userInfo.nickname : "",
       aboutMe: userInfo.aboutMe ? userInfo.aboutMe : "",
-      imagePath: userInfo.imagePath ? userInfo.imagePath : ""
+      imageFile: userInfo.imageFile ? userInfo.imageFile : null
     })
   }
   
@@ -50,12 +50,18 @@ const ModifyInfoModal: React.FC<UserData> = (userInfo) => {
     })
   };
 
-  const handleImagePathChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setUserInfo({
-      ...userInfoState,
-      imagePath: e.target.value
-    })
-  };
+  const handleImageFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    if(e.target.files){
+      console.log(e.target.files[0]);
+      console.log(typeof(e.target.files[0]));
+      console.log(URL.createObjectURL(e.target.files[0]));
+      setUserInfo({
+        ...userInfoState,
+        imageFile: e.target.files[0]
+      })
+    }
+  }
+
 
   const nicknameInput = (
     <div className="modify_info_card_input_container">
@@ -75,13 +81,13 @@ const ModifyInfoModal: React.FC<UserData> = (userInfo) => {
   const imagePathInput = (
     <div className="modify_info_card_input_container">
       <span className="badge bg-primary">프사 링크</span>
-      <input name="imagePath" value={userInfoState.imagePath} onChange={handleImagePathChange}/>
+      <input type="file" name="imageFile" onChange={e => handleImageFileChange(e)}/>
     </div>
   );
 
   const modifyInfoCard = (
     <Card>
-      <Card.Img className="modify_info_card_img" variant="top" src={userInfoState.imagePath ? userInfoState.imagePath : utils.defaultProfileImage}/>
+      <Card.Img className="modify_info_card_img" variant="top" src={userInfoState.imageFile ? URL.createObjectURL(userInfoState.imageFile) : utils.defaultProfileImage}/>
       <Card.Body>
         {nicknameInput}
         {aboutMeInput}
