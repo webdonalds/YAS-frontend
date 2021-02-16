@@ -1,6 +1,5 @@
 import axios from 'axios';
 
-
 type VideoPostsResponse = {
     videoList: Array<VideoPostInfo>,
     pageToken: number|null

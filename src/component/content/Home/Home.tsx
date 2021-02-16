@@ -92,8 +92,9 @@ const Home: React.FC<RouteComponentProps> = () => {
         <div className="home_video_list_container">
           {
             videoPostsState.videoPosts.map(post => (
+              // TODO: tags 넣기
               <VideoPostCard id={post.id} title={post.title} userId={post.userId} videoId={post.videoId} description={post.description} 
-              totalLikes={post.totalLikes} createdAt={post.createdAt} updatedAt={post.updatedAt} key={post.id}/>
+              totalLikes={post.totalLikes} createdAt={post.createdAt} updatedAt={post.updatedAt} tags={[]} key={post.id}/>
             ))
           }
         </div>

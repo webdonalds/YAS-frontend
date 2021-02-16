@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import { getVideo } from '../api/addVideo';
 import { RootState } from '../modules';
 import { initialize, setValue, addTag as addTagToRedux, deleteTag as deleteTagToRedux } from '../modules/addVideo/addVideo';
 import useDebounce from '../util/debounce';
@@ -12,12 +13,26 @@ function getVideoId(youtubeUrl: string): string {
   return (match && match[7].length==11) ? match[7] : "";
 }
 
+const setYoutubeId = (id: string) => {
+  return `https://www.youtube.com/watch?v=${id}`
+}
+
 const AddVideoHook = () => {
   const { id, url, title, description, tags } = useSelector((state: RootState) => state.addVideo);
   const dispatch = useDispatch();
 
-  const init = () => {
+  const init = async (postId: string | null) => {
     dispatch(initialize());
+    if(postId != null) {
+      const post = await getVideo(postId);
+      dispatch(setValue('id', post.videoId));
+      setUrl(setYoutubeId(post.videoId));
+      setTitle(post.title);
+      setDescription(post.description);
+      post.tags.forEach((tag) => {
+        addTag(tag);
+      });
+    }
   }
 
   const debounceSetIdFromUrl = useDebounce(url, searchDebounceDelay);

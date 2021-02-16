@@ -4,9 +4,9 @@ import AddVideoModal from "./AddVideoModal";
 import GetLogin from "../../../hooks/GetLogin";
 import { FaTimes } from 'react-icons/fa';
 import "./AddVideo.css";
-import { Redirect } from "react-router-dom";
-import { postVideo } from "../../../api/addVideo";
+import { postVideo, modifyVideo, deleteVideo } from "../../../api/addVideo";
 import { maxTagCount, maxTagLength, titleMaxLength, titleMinLength, descriptionMaxLength, tagAllowedPattern } from "../../../constant/Addvideo";
+import { match, Redirect } from "react-router-dom";
 
 const getYoutubeiframe = (id: string) => (
   <iframe src={`https://www.youtube.com/embed/${id}`}
@@ -21,14 +21,28 @@ const setYoutubeId = (id: string) => {
   return `https://www.youtube.com/watch?v=${id}`
 }
 
-const AddVideo: React.FC = () => {
+type AddVideoPathVariable = {
+  postId: string
+};
+
+type AddVideoProps = {
+  isUpdate: boolean,
+  match: match<AddVideoPathVariable>
+};
+
+const AddVideo: React.FC<AddVideoProps> = (props) => {
   const { userInfo } = GetLogin();
   const { id, url, title, description, tags, init, setUrl, setTitle, setDescription, addTag, deleteTag } = AddVideoHook();
   const [tag, setTag] = useState("");
 
   // mount될 때만 init함수가 실행되도록 하고 싶어서 lint warning을 없앴습니다.
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  useEffect(init, []);
+  useEffect(() => {
+    if(props.isUpdate) {
+      init(props.match.params.postId);
+    } else {
+      init(null);
+    }
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   if(userInfo == null) {
     alert("로그인이 필요한 페이지입니다.");
@@ -41,7 +55,7 @@ const AddVideo: React.FC = () => {
   const urlInput = (
     <div className="add-video-input-container">
       <span className="badge bg-primary">링크</span>
-      <input name="url" value={url} onChange={handleUrlChange}/>
+      <input name="url" value={url} onChange={handleUrlChange} disabled={props.isUpdate} />
     </div>
   );
 
@@ -144,13 +158,53 @@ const AddVideo: React.FC = () => {
       return;
     }
 
-    const ok = await postVideo(id, title, description, tags);
-    if(!ok) {
-      alert("알 수 없는 에러가 발생하였습니다.");
-      return;
+    // TODO: error handling
+    let ok = false;
+    if(props.isUpdate) {
+      ok = await modifyVideo(props.match.params.postId, title, description, tags);
+      if(!ok) {
+        alert("알 수 없는 에러가 발생하였습니다.");
+        return;
+      }
+    } else {
+      ok = await postVideo(id, title, description, tags);
+      if(!ok) {
+        alert("알 수 없는 에러가 발생하였습니다.");
+        return;
+      }
     }
 
+    // TODO: 동영상 페이지로 리다이렉트
     alert("gooood");
+  }
+
+  const handleDelete = async () => {
+    if(confirm("삭제 하시겠습니까?")) {
+      const ok = await deleteVideo(props.match.params.postId);
+      if(!ok) {
+        alert("삭제에 실패했습니다. 다시 시도해 주세요.");
+        return;
+      }
+
+      // TODO: 메인 페이지로 리다이렉트
+      alert("삭제 되었습니다.");
+    }
+  };
+
+  let submitButton;
+  if(props.isUpdate) {
+    submitButton = (
+      <div>
+        <button type="button" className="btn btn-danger add-video-submit-button" onClick={handleDelete}>삭제</button>
+        <button type="button" className="btn btn-primary add-video-submit-button" onClick={handleSubmit}>수정</button>
+      </div>
+    )
+  } else {
+    submitButton = (
+      <div>
+        <button type="button" className="btn btn-success add-video-submit-button" onClick={handleSubmit}>등록</button>
+      </div>
+    );
   }
 
   return (<div className="add-video-container">
@@ -163,7 +217,7 @@ const AddVideo: React.FC = () => {
     <div className="add-video-tags-container">
       {tags.map((tag, idx) => tagInput(tag, idx))}
     </div>
-    <button type="button" className="btn btn-success add-video-submit-button" onClick={handleSubmit}>등록</button>
+    { submitButton }
   </div>);
 }
 
