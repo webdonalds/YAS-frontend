@@ -4,9 +4,10 @@ import { Redirect } from "react-router-dom";
 import { Button, Modal, Card } from 'react-bootstrap';
 import { AiFillEdit } from "react-icons/ai";
 import utils from "../../../../service/utils";
-import { putUserInfo } from "../../../../api/myPage";
+import { putUserInfo, putProfileImage } from "../../../../api/myPage";
 import "./ModifyInfoModal.css";
 import { getSavedLoginThunk } from "../../../../modules/auth/authThunk";
+
 
 const ModifyInfoModal: React.FC<UserData> = (userInfo) => {
   const [show, setShow] = useState(false);
@@ -52,17 +53,37 @@ const ModifyInfoModal: React.FC<UserData> = (userInfo) => {
 
   const handleImageFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if(e.target.files){
-      console.log(e.target.files[0]);
-      console.log(typeof(e.target.files[0]));
-      console.log(URL.createObjectURL(e.target.files[0]));
-      setUserInfo({
-        ...userInfoState,
-        imageFile: e.target.files[0]
-      })
+      const file = e.target.files[0];
+  
+      try{
+        const fileString = await file2String(file);
+        setUserInfo({
+          ...userInfoState,
+          imageFile: fileString
+        })
+      } catch (e) {
+        console.log(e.message);
+      }
     }
   }
 
-
+  const file2String = (file:File) => {
+    const fileReader = new FileReader();
+  
+    return new Promise<string>((resolve, reject) => {
+      fileReader.onerror = () => {
+        fileReader.abort();
+        reject(new DOMException("Problem while converting image to base64!!!"));
+      };
+  
+      fileReader.onload = () => {
+        resolve(fileReader.result as string);
+      };
+      fileReader.readAsDataURL(file);
+    });
+  };
+  
+  
   const nicknameInput = (
     <div className="modify_info_card_input_container">
       <span className="badge bg-primary">닉네임</span>
@@ -81,13 +102,14 @@ const ModifyInfoModal: React.FC<UserData> = (userInfo) => {
   const imagePathInput = (
     <div className="modify_info_card_input_container">
       <span className="badge bg-primary">프사 링크</span>
-      <input type="file" name="imageFile" onChange={e => handleImageFileChange(e)}/>
+      <input type="file" name="imageFile" accept="image/*" onChange={e => handleImageFileChange(e)}/>
     </div>
   );
 
+
   const modifyInfoCard = (
     <Card>
-      <Card.Img className="modify_info_card_img" variant="top" src={userInfoState.imageFile ? URL.createObjectURL(userInfoState.imageFile) : utils.defaultProfileImage}/>
+      <Card.Img className="modify_info_card_img" variant="top" src={userInfoState.imageFile ? userInfoState.imageFile : utils.defaultProfileImage}/>
       <Card.Body>
         {nicknameInput}
         {aboutMeInput}
@@ -98,6 +120,9 @@ const ModifyInfoModal: React.FC<UserData> = (userInfo) => {
 
   const handleMyInfoModify = async () => {
     const result = await putUserInfo(userInfoState.nickname, userInfoState.aboutMe);
+    if(userInfoState.imageFile){
+      const result2 = await putProfileImage(userInfoState.imageFile);
+    }
 
     if('error' in result){
       alert("정보 수정에 실패했습니다." + result.error.message);
