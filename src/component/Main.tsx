@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { useDispatch } from "react-redux";
 import { BrowserRouter, Switch, Route } from "react-router-dom";
 import GetLogin from "../hooks/GetLogin";
@@ -11,22 +11,12 @@ import MyPage from "./content/MyPage/MyPage";
 import "./Main.css";
 
 const Main: React.FC = () => {
-  const { userInfo, tokens, error } = GetLogin();
-  const [initialized, setInitialized] = useState(false);
+  const { initialized } = GetLogin();
 
   const dispatch = useDispatch();
-
-  const initialize = () => {
-    // if not initialized
-    if(!initialized) {
-      if(userInfo==null && tokens==null && error==null) {
-        dispatch(getSavedLoginThunk());
-      }
-      setInitialized(true);
-    }
-  };
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  useEffect(initialize, [initialized]);
+  if(!initialized) {
+    dispatch(getSavedLoginThunk());
+  }
 
   const bodyComponent = initialized ? (
     <>
