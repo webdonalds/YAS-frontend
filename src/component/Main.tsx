@@ -3,7 +3,7 @@ import { useDispatch } from "react-redux";
 import { BrowserRouter, Switch, Route } from "react-router-dom";
 import GetLogin from "../hooks/GetLogin";
 import { getSavedLoginThunk } from "../modules/auth/authThunk";
-import AddVideo from "./content/Add/AddVideo";
+import AddVideo from "./content/AddVideo/AddVideo";
 import Header from "./content/Header/Header";
 import Home from "./content/Home/Home";
 import MyPage from "./content/MyPage/MyPage";
