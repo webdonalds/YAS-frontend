@@ -48,6 +48,8 @@ const getSavedLoginThunk = (): ThunkAction<void, RootState, null, AuthAction> =>
     // if api call fails
     if('error' in userInfo){
       alert("Logouted. Please re-login");
+      axios.defaults.headers.common['x-access-token'] = null;
+      localStorageService.deleteUserTokenInLocalStorage();
       dispatch(logoutRequest());
     } else{
       dispatch(loginSuccess(userInfo, savedUserToken));
