@@ -37,6 +37,7 @@ const getSavedLoginThunk = (): ThunkAction<void, RootState, null, AuthAction> =>
     const savedUserToken = localStorageService.getUserTokenFromLocalStorage();
 
     if(savedUserToken==null){
+      dispatch(logoutRequest());
       return;
     }
   

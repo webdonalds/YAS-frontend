@@ -35,12 +35,14 @@ export type AuthAction = ActionType<typeof actions>;
 
 // State
 type AuthState = {
+  initialized: boolean,
   userInfo: UserData | null,
   tokens: Tokens | null,
   error: LoginErrorResponse | null,
 }
 
 const initialState: AuthState = {
+  initialized: false,
   userInfo: null,
   tokens: null,
   error: null,
@@ -49,20 +51,20 @@ const initialState: AuthState = {
 
 const auth = createReducer<AuthState, AuthAction>(initialState, {
   [LOGIN_REQUEST]: state => state,
-  [LOGIN_SUCCESS]: (state, action) => ({
-    ...state,
+  [LOGIN_SUCCESS]: (_, action) => ({
+    initialized: true,
     userInfo: action.payload.userInfo,
     tokens: action.payload.tokens,
     error: null,
   }),
-  [LOGIN_ERROR]: (state, action) => ({
-    ...state,
+  [LOGIN_ERROR]: (_, action) => ({
+    initialized: true,
     userInfo: null,
     tokens: null,
     error: action.payload,
   }),
-  [LOGOUT_REQUEST] : (state) => ({
-    ...state,
+  [LOGOUT_REQUEST] : () => ({
+    initialized: true,
     userInfo: null,
     tokens: null,
     error: null

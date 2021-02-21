@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { useDispatch } from "react-redux";
 import { BrowserRouter, Switch, Route } from "react-router-dom";
 import GetLogin from "../hooks/GetLogin";
@@ -11,34 +11,30 @@ import MyPage from "./content/MyPage/MyPage";
 import "./Main.css";
 
 const Main: React.FC = () => {
-  const { userInfo, tokens, error } = GetLogin();
-  const [initialized, setInitialized] = useState(false);
+  const { initialized } = GetLogin();
 
   const dispatch = useDispatch();
+  if(!initialized) {
+    dispatch(getSavedLoginThunk());
+  }
 
-  const initialize = () => {
-    // if not initialized
-    if(!initialized) {
-      if(userInfo==null && tokens==null && error==null) {
-        dispatch(getSavedLoginThunk());
-      }
-      setInitialized(true);
-    }
-  };
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  useEffect(initialize, [initialized]);
+  const bodyComponent = initialized ? (
+    <>
+      <Switch>
+        <Route path="/" exact={true} component={Home} />
+        <Route path="/my-page" component={MyPage} />
+        <Route path="/add-video" render={({match}) => <AddVideo isUpdate={false} match={match} />} />
+        <Route path="/modify-video/:postId" render={({match}) => <AddVideo isUpdate={true} match={match} />} />
+      </Switch>
+    </>
+  ) : null;
 
   return (
     <BrowserRouter>
       <div className="full_main_page container">
         <div className="inner_main_page">
           <Header />
-            <Switch>
-              <Route path="/" exact={true} component={Home} />
-              <Route path="/my-page" component={MyPage} />
-              <Route path="/add-video" render={({match}) => <AddVideo isUpdate={false} match={match} />} />
-              <Route path="/modify-video/:postId" render={({match}) => <AddVideo isUpdate={true} match={match} />} />
-            </Switch>
+          {bodyComponent}
         </div>
       </div>
     </BrowserRouter>

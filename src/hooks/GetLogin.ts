@@ -2,9 +2,10 @@ import { useSelector } from 'react-redux';
 import { RootState } from '../modules';
 
 const GetLogin = () => {
-  const { userInfo, tokens, error } = useSelector((state: RootState) => state.auth);
+  const { initialized, userInfo, tokens, error } = useSelector((state: RootState) => state.auth);
   
   return {
+    initialized,
     userInfo,
     tokens,
     error,
