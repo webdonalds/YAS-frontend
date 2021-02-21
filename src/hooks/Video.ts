@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { getVideo } from '../api/addVideo';
 import { RootState } from '../modules';
-import { initialize, setValue, addTag as addTagToRedux, deleteTag as deleteTagToRedux } from '../modules/addVideo/addVideo';
+import { initialize, setValue, addTag as addTagToRedux, deleteTag as deleteTagToRedux, setUser } from '../modules/video/video';
 import useDebounce from '../util/debounce';
 
 const searchDebounceDelay = 500; // ms
@@ -17,8 +17,8 @@ const setYoutubeId = (id: string) => {
   return `https://www.youtube.com/watch?v=${id}`
 }
 
-const AddVideoHook = () => {
-  const { id, url, title, description, tags } = useSelector((state: RootState) => state.addVideo);
+const VideoHook = () => {
+  const { id, url, title, description, tags, user } = useSelector((state: RootState) => state.video);
   const dispatch = useDispatch();
 
   const init = async (postId: string | null) => {
@@ -26,11 +26,12 @@ const AddVideoHook = () => {
     if(postId != null) {
       const post = await getVideo(postId);
       dispatch(setValue('id', post.videoId));
+      dispatch(setUser(post.user));
       setUrl(setYoutubeId(post.videoId));
       setTitle(post.title);
       setDescription(post.description);
       post.tags.forEach((tag) => {
-        addTag(tag);
+        addTag(tag.tagName);
       });
     }
   }
@@ -68,6 +69,7 @@ const AddVideoHook = () => {
     title,
     description,
     tags,
+    user,
     init,
     setUrl,
     setTitle,
@@ -77,4 +79,4 @@ const AddVideoHook = () => {
   }
 }
 
-export default AddVideoHook;
+export default VideoHook;

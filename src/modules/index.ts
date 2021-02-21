@@ -1,8 +1,8 @@
 import { combineReducers } from 'redux';
 import auth from './auth/auth';
-import addVideo from './addVideo/addVideo';
+import video from './video/video';
 
-const rootReducer = combineReducers({ auth, addVideo });
+const rootReducer = combineReducers({ auth, video });
 
 export default rootReducer;
 

@@ -150,12 +150,14 @@ const getSearchList = async (keyword: string, pageToken: string|undefined = unde
 };
 
 // TODO: error handling
-const getVideo = async (postId: string): Promise<VideoPostInfo> => {
+const getVideo = async (postId: string): Promise<VideoPostInfoWithUser> => {
   const res = await axios.request({
     baseURL: API_URL,
     url: `/v1/post/video/${postId}`,
     method: 'get'
   });
+  res.data.tags = res.data.Tags;
+  res.data.user = res.data.User;
   return res.data;
 }
 
