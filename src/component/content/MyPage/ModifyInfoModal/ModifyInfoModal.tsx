@@ -67,6 +67,13 @@ const ModifyInfoModal: React.FC<UserData> = (userInfo) => {
     }
   }
 
+  const handleImageFileDelete = () => {
+    setUserInfo({
+      ...userInfoState,
+      imageFile: null
+    })
+  }
+
   const file2String = (file:File) => {
     const fileReader = new FileReader();
   
@@ -100,10 +107,13 @@ const ModifyInfoModal: React.FC<UserData> = (userInfo) => {
 
   // TODO : profile image validation check
   const imagePathInput = (
-    <div className="modify_info_card_input_container">
-      <span className="badge bg-primary">프사 링크</span>
-      <input type="file" name="imageFile" accept="image/*" onChange={e => handleImageFileChange(e)}/>
-    </div>
+    <>
+      <div className="modify_info_card_input_container">
+        <span className="badge bg-primary">프사 파일</span>
+        <input type="file" name="imageFile" accept="image/*" onChange={e => handleImageFileChange(e)}/>
+      </div>
+      <Button variant="danger" onClick={handleImageFileDelete}>프로필 사진 삭제</Button>
+    </>
   );
 
 
@@ -119,13 +129,16 @@ const ModifyInfoModal: React.FC<UserData> = (userInfo) => {
   )
 
   const handleMyInfoModify = async () => {
-    const result = await putUserInfo(userInfoState.nickname, userInfoState.aboutMe);
-    if(userInfoState.imageFile){
-      const result2 = await putProfileImage(userInfoState.imageFile);
+    const modifyInfoResult = await putUserInfo(userInfoState.nickname, userInfoState.aboutMe);
+    if(userInfoState.imageFile != userInfo.imageFile){
+      const modifyProfileImageResult = await putProfileImage(userInfoState.imageFile);
+      if('error' in modifyProfileImageResult){
+        alert("프로필 사진 수정에 실패했습니다." + modifyProfileImageResult.error.message);
+      }
     }
 
-    if('error' in result){
-      alert("정보 수정에 실패했습니다." + result.error.message);
+    if('error' in modifyInfoResult){
+      alert("정보 수정에 실패했습니다." + modifyInfoResult.error.message);
       return;
     }
 

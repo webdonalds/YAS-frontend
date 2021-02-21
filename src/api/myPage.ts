@@ -33,7 +33,7 @@ const putUserInfo = async (nickname:string, aboutMe:string|null): Promise<ErrorR
     }
 };
 
-const putProfileImage = async (imageFile: string): Promise<ErrorResponse | PutProfileImageResponse> => {
+const putProfileImage = async (imageFile: string | null): Promise<ErrorResponse | PutProfileImageResponse> => {
     try{
         const res = await axios.request<PutProfileImageResponse>({
             baseURL: API_URL,
