@@ -2,9 +2,37 @@ import { ThunkAction } from 'redux-thunk';
 import axios from 'axios';
 import { RootState } from '..';
 import { AuthAction, loginRequest, loginSuccess, loginError, logoutRequest } from './auth';
-import { getAuthToken } from '../../api/login';
+import { getAuthToken, refreshAuthToken } from '../../api/login';
 import localStorageService from '../../service/localStorageService';
 import { getUserInfo } from '../../api/user';
+
+const JWT_EXPIRY_TIME = 3600*1000;
+const JWT_REFRESH_FREQUENCY = JWT_EXPIRY_TIME / 2;
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const refresh = async (dispatch: any) => {
+  const savedUserToken = localStorageService.getUserTokenFromLocalStorage();
+  if(savedUserToken == null) {
+    return;
+  }
+
+  try {
+    const accessToken = await refreshAuthToken(savedUserToken.yasRefreshToken);
+    savedUserToken.yasAccessToken = accessToken;
+    localStorageService.setUserTokenToLocalStorage(savedUserToken);
+
+    axios.defaults.headers.common['x-access-token'] = accessToken;
+
+    setTimeout(() => {
+      refresh(dispatch);
+    }, JWT_REFRESH_FREQUENCY);
+  } catch (e) {
+    alert("Logouted. Please re-login");
+    axios.defaults.headers.common['x-access-token'] = null;
+    localStorageService.deleteUserTokenInLocalStorage();
+    dispatch(logoutRequest());
+  }
+}
 
 const loginThunk = (code: string): ThunkAction<void, RootState, null, AuthAction> => {
   return async (dispatch) => {
@@ -18,6 +46,7 @@ const loginThunk = (code: string): ThunkAction<void, RootState, null, AuthAction
 
       axios.defaults.headers.common['x-access-token'] = loginInfo.tokens.yasAccessToken;
       dispatch(loginSuccess(loginInfo.userInfo, loginInfo.tokens));
+      refresh(dispatch);
     } catch (e) {
       dispatch(loginError(e));
     }
@@ -53,6 +82,7 @@ const getSavedLoginThunk = (): ThunkAction<void, RootState, null, AuthAction> =>
       dispatch(logoutRequest());
     } else{
       dispatch(loginSuccess(userInfo, savedUserToken));
+      refresh(dispatch);
     }
   }
 }
