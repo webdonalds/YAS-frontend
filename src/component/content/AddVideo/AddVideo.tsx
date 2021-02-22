@@ -7,11 +7,7 @@ import "./AddVideo.css";
 import { postVideo, modifyVideo, deleteVideo } from "../../../api/addVideo";
 import { maxTagCount, maxTagLength, titleMaxLength, titleMinLength, descriptionMaxLength, tagAllowedPattern } from "../../../constant/Addvideo";
 import { match, Redirect } from "react-router-dom";
-import { getYoutubeiframe } from "../../../util/youtube";
-
-const setYoutubeId = (id: string) => {
-  return `https://www.youtube.com/watch?v=${id}`
-}
+import { getYoutubeiframe, getYoutubeUrl } from "../../../util/youtube";
 
 type AddVideoPathVariable = {
   postId: string
@@ -116,7 +112,7 @@ const AddVideo: React.FC<AddVideoProps> = (props) => {
   }
 
   const setVideo = (id: string) => {
-    setUrl(setYoutubeId(id));
+    setUrl(getYoutubeUrl(id));
   }
 
   const tagsInput = (

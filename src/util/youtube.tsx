@@ -10,6 +10,11 @@ const getYoutubeiframe = (id: string): JSX.Element => (
   />
 );
 
+const getYoutubeUrl = (id: string): string => {
+  return `https://www.youtube.com/watch?v=${id}`
+}
+
 export {
-  getYoutubeiframe
+  getYoutubeiframe,
+  getYoutubeUrl
 };

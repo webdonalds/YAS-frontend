@@ -4,6 +4,7 @@ import { getVideo } from '../api/addVideo';
 import { RootState } from '../modules';
 import { initialize, setValue, addTag as addTagToRedux, deleteTag as deleteTagToRedux, setUser } from '../modules/video/video';
 import useDebounce from '../util/debounce';
+import { getYoutubeUrl } from '../util/youtube';
 
 const searchDebounceDelay = 500; // ms
 
@@ -11,10 +12,6 @@ function getVideoId(youtubeUrl: string): string {
   const regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*/;
   const match = youtubeUrl.match(regExp);
   return (match && match[7].length==11) ? match[7] : "";
-}
-
-const setYoutubeId = (id: string) => {
-  return `https://www.youtube.com/watch?v=${id}`
 }
 
 const VideoHook = () => {
@@ -27,7 +24,7 @@ const VideoHook = () => {
       const post = await getVideo(postId);
       dispatch(setValue('id', post.videoId));
       dispatch(setUser(post.user));
-      setUrl(setYoutubeId(post.videoId));
+      setUrl(getYoutubeUrl(post.videoId));
       setTitle(post.title);
       setDescription(post.description);
       post.tags.forEach((tag) => {
