@@ -1,10 +1,11 @@
 import { createAction, ActionType, createReducer } from 'typesafe-actions';
 
 // Action type
-const ADD_TAG = 'add-video/ADD_TAG';
-const DELETE_TAG = 'add-video/DELETE_TAG';
-const SET_VALUE = 'add-video/SET_VALUE';
-const INITIALIZE = 'add-video/INITIALIZE';
+const ADD_TAG = 'video/ADD_TAG';
+const DELETE_TAG = 'video/DELETE_TAG';
+const SET_VALUE = 'video/SET_VALUE';
+const SET_USER = 'video/SET_USER';
+const INITIALIZE = 'video/INITIALIZE';
 
 
 // Action generator
@@ -33,19 +34,28 @@ export const setValue = createAction(
     }
   }
 )();
+export const setUser = createAction(
+  SET_USER,
+  (user: UserData) => {
+    return {
+      user: user
+    }
+  }
+)();
 export const initialize = createAction(INITIALIZE)();
 
-const actions = { addTag, deleteTag, setValue, initialize };
-export type AddVideoAction = ActionType<typeof actions>;
+const actions = { addTag, deleteTag, setValue, setUser, initialize };
+export type VideoAction = ActionType<typeof actions>;
 
 
 // State
-type AddVideoState = {
+type VideoState = {
   id: string,
   url: string,
   title: string,
   description: string,
   tags: Array<string>,
+  user: UserData | null,
 };
 
 const initialState = {
@@ -54,9 +64,10 @@ const initialState = {
   title: "",
   description: "",
   tags: [],
+  user: null,
 };
 
-const addVideo = createReducer<AddVideoState, AddVideoAction>(initialState, {
+const addVideo = createReducer<VideoState, VideoAction>(initialState, {
   [ADD_TAG]: (state, action) => {
     const newTags = state.tags;
     newTags.push(action.payload.value)
@@ -73,12 +84,17 @@ const addVideo = createReducer<AddVideoState, AddVideoAction>(initialState, {
     ...state,
     [action.payload.name]: action.payload.value,
   }),
+  [SET_USER]: (state, action) => ({
+    ...state,
+    user: action.payload.user
+  }),
   [INITIALIZE]: () => ({
     id: "",
     url: "",
     title: "",
     description: "",
     tags: [],
+    user: null
   }),
 });
 

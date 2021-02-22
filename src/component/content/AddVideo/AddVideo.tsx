@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import AddVideoHook from "../../../hooks/AddVideo";
+import VideoHook from "../../../hooks/Video";
 import AddVideoModal from "./AddVideoModal";
 import GetLogin from "../../../hooks/GetLogin";
 import { FaTimes } from 'react-icons/fa';
@@ -7,19 +7,7 @@ import "./AddVideo.css";
 import { postVideo, modifyVideo, deleteVideo } from "../../../api/addVideo";
 import { maxTagCount, maxTagLength, titleMaxLength, titleMinLength, descriptionMaxLength, tagAllowedPattern } from "../../../constant/Addvideo";
 import { match, Redirect } from "react-router-dom";
-
-const getYoutubeiframe = (id: string) => (
-  <iframe src={`https://www.youtube.com/embed/${id}`}
-        frameBorder='0'
-        allow='autoplay; encrypted-media'
-        allowFullScreen
-        title='video'
-        className='add-video-youtube-video'
-  />
-);
-const setYoutubeId = (id: string) => {
-  return `https://www.youtube.com/watch?v=${id}`
-}
+import { getYoutubeiframe, getYoutubeUrl } from "../../../util/youtube";
 
 type AddVideoPathVariable = {
   postId: string
@@ -32,7 +20,7 @@ type AddVideoProps = {
 
 const AddVideo: React.FC<AddVideoProps> = (props) => {
   const { userInfo } = GetLogin();
-  const { id, url, title, description, tags, init, setUrl, setTitle, setDescription, addTag, deleteTag } = AddVideoHook();
+  const { id, url, title, description, tags, init, setUrl, setTitle, setDescription, addTag, deleteTag } = VideoHook();
   const [tag, setTag] = useState("");
 
   // mount될 때만 init함수가 실행되도록 하고 싶어서 lint warning을 없앴습니다.
@@ -110,7 +98,7 @@ const AddVideo: React.FC<AddVideoProps> = (props) => {
         alert(`한 태그의 길이는 ${maxTagLength}자까지 가능합니다.`);
         return;
       }
-      if(tags.some((val) => (val==tag))) {
+      if(tags.some((val: string) => (val==tag))) {
         alert("같은이름의 태그가 존재합니다.");
         return;
       }
@@ -124,7 +112,7 @@ const AddVideo: React.FC<AddVideoProps> = (props) => {
   }
 
   const setVideo = (id: string) => {
-    setUrl(setYoutubeId(id));
+    setUrl(getYoutubeUrl(id));
   }
 
   const tagsInput = (

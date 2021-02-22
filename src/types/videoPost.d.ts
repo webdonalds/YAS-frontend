@@ -5,7 +5,15 @@ declare type VideoPostInfo = {
     title: string,
     description: string,
     totalLikes: number,
-    tags: string[],
+    tags: Tag[],
     createdAt: string,
     updatedAt: string
+};
+
+declare type VideoPostInfoWithUser = {
+    user: UserData
+} & VideoPostInfo;
+
+declare type Tag = {
+    tagName: string
 };
