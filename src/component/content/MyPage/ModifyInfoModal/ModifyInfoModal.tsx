@@ -7,6 +7,7 @@ import utils from "../../../../service/utils";
 import { putUserInfo, putProfileImage } from "../../../../api/myPage";
 import "./ModifyInfoModal.css";
 import { getSavedLoginThunk } from "../../../../modules/auth/authThunk";
+import imageManageService from '../../../../service/imageManageService';
 
 
 const ModifyInfoModal: React.FC<UserData> = (userInfo) => {
@@ -56,16 +57,24 @@ const ModifyInfoModal: React.FC<UserData> = (userInfo) => {
       const file = e.target.files[0];
   
       try{
-        const fileString = await file2String(file);
+        const imageString = await imageManageService.convertImageFile2String(file);
+        const resizedImageString = await imageManageService.resizeImageString(imageString);
+
+        console.log(imageString);
+        console.log(imageString.length);
+        console.log(resizedImageString);
+        console.log(resizedImageString.length);
+
         setUserInfo({
           ...userInfoState,
-          imageFile: fileString
+          imageFile: imageString
         })
       } catch (e) {
         console.log(e.message);
       }
     }
   }
+
 
   const handleImageFileDelete = () => {
     setUserInfo({
@@ -74,22 +83,6 @@ const ModifyInfoModal: React.FC<UserData> = (userInfo) => {
     })
   }
 
-  const file2String = (file:File) => {
-    const fileReader = new FileReader();
-  
-    return new Promise<string>((resolve, reject) => {
-      fileReader.onerror = () => {
-        fileReader.abort();
-        reject(new DOMException("Problem while converting image to base64!!!"));
-      };
-  
-      fileReader.onload = () => {
-        resolve(fileReader.result as string);
-      };
-      fileReader.readAsDataURL(file);
-    });
-  };
-  
   
   const nicknameInput = (
     <div className="modify_info_card_input_container">
