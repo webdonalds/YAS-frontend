@@ -60,14 +60,9 @@ const ModifyInfoModal: React.FC<UserData> = (userInfo) => {
         const imageString = await imageManageService.convertimageFile2String(file);
         const resizedImageString = await imageManageService.resizeImageString(imageString);
 
-        console.log(imageString);
-        console.log(imageString.length);
-        console.log(resizedImageString);
-        console.log(resizedImageString.length);
-
         setUserInfo({
           ...userInfoState,
-          imagePath: imageString
+          imagePath: resizedImageString
         })
       } catch (e) {
         console.log(e.message);
@@ -98,7 +93,6 @@ const ModifyInfoModal: React.FC<UserData> = (userInfo) => {
     </div>
   );
 
-  // TODO : profile image validation check
   const imagePathInput = (
     <>
       <div className="modify_info_card_input_container">
@@ -108,7 +102,6 @@ const ModifyInfoModal: React.FC<UserData> = (userInfo) => {
       <Button variant="danger" onClick={handleimagePathDelete}>프로필 사진 삭제</Button>
     </>
   );
-
 
   const modifyInfoCard = (
     <Card>
@@ -124,10 +117,15 @@ const ModifyInfoModal: React.FC<UserData> = (userInfo) => {
   const handleMyInfoModify = async () => {
     const modifyInfoResult = await putUserInfo(userInfoState.nickname, userInfoState.aboutMe);
     if(userInfoState.imagePath != userInfo.imagePath){
-      const modifyProfileImageResult = await putProfileImage(userInfoState.imagePath);
-      if('error' in modifyProfileImageResult){
-        alert("프로필 사진 수정에 실패했습니다." + modifyProfileImageResult.error.message);
-      }
+      if(userInfoState.imagePath && userInfoState.imagePath.length > 1000000){
+        alert("프로필 사진 크기가 너무 큽니다.");
+      } 
+      else {
+        const modifyProfileImageResult = await putProfileImage(userInfoState.imagePath);
+        if('error' in modifyProfileImageResult){
+          alert("프로필 사진 수정에 실패했습니다." + modifyProfileImageResult.error.message);
+        }
+      }      
     }
 
     if('error' in modifyInfoResult){
