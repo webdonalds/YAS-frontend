@@ -80,16 +80,16 @@ const MyPage: React.FC<RouteComponentProps> = () => {
     }
   }
   //new Blob([buffer]);
-  //URL.createObjectURL(userInfoState.imageFile)
+  //URL.createObjectURL(userInfoState.imagePath)
   const MyInfoCard = (
     <div className="my_page_my_info_card">
-      <img src={userInfo.imageFile ? userInfo.imageFile : utils.defaultProfileImage} alt="test" className="img-thumbnail"/>
+      <img src={userInfo.imagePath ? userInfo.imagePath : utils.defaultProfileImage} alt="test" className="img-thumbnail"/>
       <div className="my_page_my_info_card_content">
         <div>{userInfo.nickname}</div>
         <div>{userInfo.aboutMe}</div>
       </div>
       <ModifyInfoModal id={userInfo.id} email={userInfo.email} nickname={userInfo.nickname} 
-      imageFile={userInfo.imageFile} aboutMe={userInfo.aboutMe}/>
+      imagePath={userInfo.imagePath} aboutMe={userInfo.aboutMe}/>
     </div>
   )
 

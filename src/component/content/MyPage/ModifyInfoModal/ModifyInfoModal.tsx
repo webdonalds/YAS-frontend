@@ -16,7 +16,7 @@ const ModifyInfoModal: React.FC<UserData> = (userInfo) => {
     ...userInfo,
     nickname: userInfo.nickname ? userInfo.nickname : "",
     aboutMe: userInfo.aboutMe ? userInfo.aboutMe : "",
-    imageFile: userInfo.imageFile ? userInfo.imageFile : null
+    imagePath: userInfo.imagePath ? userInfo.imagePath : null
   });
 
   const dispatch = useDispatch();
@@ -26,7 +26,7 @@ const ModifyInfoModal: React.FC<UserData> = (userInfo) => {
       ...userInfo,
       nickname: userInfo.nickname ? userInfo.nickname : "",
       aboutMe: userInfo.aboutMe ? userInfo.aboutMe : "",
-      imageFile: userInfo.imageFile ? userInfo.imageFile : null
+      imagePath: userInfo.imagePath ? userInfo.imagePath : null
     })
   }
   
@@ -52,12 +52,12 @@ const ModifyInfoModal: React.FC<UserData> = (userInfo) => {
     })
   };
 
-  const handleImageFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleimagePathChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if(e.target.files){
       const file = e.target.files[0];
   
       try{
-        const imageString = await imageManageService.convertImageFile2String(file);
+        const imageString = await imageManageService.convertimageFile2String(file);
         const resizedImageString = await imageManageService.resizeImageString(imageString);
 
         console.log(imageString);
@@ -67,7 +67,7 @@ const ModifyInfoModal: React.FC<UserData> = (userInfo) => {
 
         setUserInfo({
           ...userInfoState,
-          imageFile: imageString
+          imagePath: imageString
         })
       } catch (e) {
         console.log(e.message);
@@ -76,10 +76,10 @@ const ModifyInfoModal: React.FC<UserData> = (userInfo) => {
   }
 
 
-  const handleImageFileDelete = () => {
+  const handleimagePathDelete = () => {
     setUserInfo({
       ...userInfoState,
-      imageFile: null
+      imagePath: null
     })
   }
 
@@ -103,16 +103,16 @@ const ModifyInfoModal: React.FC<UserData> = (userInfo) => {
     <>
       <div className="modify_info_card_input_container">
         <span className="badge bg-primary">프사 파일</span>
-        <input type="file" name="imageFile" accept="image/*" onChange={e => handleImageFileChange(e)}/>
+        <input type="file" name="imagePath" accept="image/*" onChange={e => handleimagePathChange(e)}/>
       </div>
-      <Button variant="danger" onClick={handleImageFileDelete}>프로필 사진 삭제</Button>
+      <Button variant="danger" onClick={handleimagePathDelete}>프로필 사진 삭제</Button>
     </>
   );
 
 
   const modifyInfoCard = (
     <Card>
-      <Card.Img className="modify_info_card_img" variant="top" src={userInfoState.imageFile ? userInfoState.imageFile : utils.defaultProfileImage}/>
+      <Card.Img className="modify_info_card_img" variant="top" src={userInfoState.imagePath ? userInfoState.imagePath : utils.defaultProfileImage}/>
       <Card.Body>
         {nicknameInput}
         {aboutMeInput}
@@ -123,8 +123,8 @@ const ModifyInfoModal: React.FC<UserData> = (userInfo) => {
 
   const handleMyInfoModify = async () => {
     const modifyInfoResult = await putUserInfo(userInfoState.nickname, userInfoState.aboutMe);
-    if(userInfoState.imageFile != userInfo.imageFile){
-      const modifyProfileImageResult = await putProfileImage(userInfoState.imageFile);
+    if(userInfoState.imagePath != userInfo.imagePath){
+      const modifyProfileImageResult = await putProfileImage(userInfoState.imagePath);
       if('error' in modifyProfileImageResult){
         alert("프로필 사진 수정에 실패했습니다." + modifyProfileImageResult.error.message);
       }

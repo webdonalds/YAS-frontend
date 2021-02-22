@@ -1,4 +1,4 @@
-const convertImageFile2String = (file:File): Promise<string> => {
+const convertimageFile2String = (file:File): Promise<string> => {
     const fileReader = new FileReader();
   
     return new Promise<string>((resolve, reject) => {
@@ -14,7 +14,7 @@ const convertImageFile2String = (file:File): Promise<string> => {
     });
 };
 
-const resizeImageString = (base64Str: string, maxWidth = 200, maxHeight = 200): Promise<string> => {
+const resizeImageString = (base64Str: string, maxWidth = 400, maxHeight = 400): Promise<string> => {
     return new Promise<string>((resolve) => {
         const img = new Image()
         img.src = base64Str
@@ -48,6 +48,6 @@ const resizeImageString = (base64Str: string, maxWidth = 200, maxHeight = 200): 
 }
 
 export default {
-    convertImageFile2String,
+    convertimageFile2String,
     resizeImageString
 }
