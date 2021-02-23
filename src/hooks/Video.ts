@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { getVideo } from '../api/addVideo';
 import { RootState } from '../modules';
@@ -17,6 +17,7 @@ function getVideoId(youtubeUrl: string): string {
 const VideoHook = () => {
   const { id, url, title, description, tags, user } = useSelector((state: RootState) => state.video);
   const dispatch = useDispatch();
+  const [initialized, setInitialized] = useState(false);
 
   const init = async (postId: string | null) => {
     dispatch(initialize());
@@ -30,6 +31,7 @@ const VideoHook = () => {
       post.tags.forEach((tag) => {
         addTag(tag.tagName);
       });
+      setInitialized(true);
     }
   }
 
@@ -61,6 +63,7 @@ const VideoHook = () => {
   }
 
   return {
+    initialized,
     id,
     url,
     title,
