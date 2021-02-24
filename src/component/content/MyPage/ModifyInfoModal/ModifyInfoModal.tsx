@@ -66,6 +66,7 @@ const ModifyInfoModal: React.FC<UserData> = (userInfo) => {
         })
       } catch (e) {
         console.log(e.message);
+        alert("이미지 파일을 확인해주세요.");
       }
     }
   }
