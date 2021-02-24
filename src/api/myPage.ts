@@ -11,6 +11,10 @@ type GetMyVideosResponse = {
     pageToken: number|null
 }
 
+type PutProfileImageResponse = {
+    message: string
+}
+
 const putUserInfo = async (nickname:string, aboutMe:string|null): Promise<ErrorResponse | PutUserInfoResponse>=> {
     try{
         const res = await axios.request<ErrorResponse | PutUserInfoResponse>({
@@ -28,6 +32,23 @@ const putUserInfo = async (nickname:string, aboutMe:string|null): Promise<ErrorR
         return <ErrorResponse> error.response.data;
     }
 };
+
+const putProfileImage = async (imagePath: string | null): Promise<ErrorResponse | PutProfileImageResponse> => {
+    try{
+        const res = await axios.request<PutProfileImageResponse>({
+            baseURL: API_URL,
+            url: '/v1/user/profile-image',
+            method: 'put',
+            data: {
+                imagePath: imagePath
+            }
+        });
+        
+        return res.data;
+    } catch(error){
+        return <ErrorResponse> error.response.data;
+    }
+}
 
 const getMyVideos = async (userId:number, pageToken:number|null): Promise<GetMyVideosResponse | ErrorResponse> => {
     try{
@@ -48,5 +69,6 @@ const getMyVideos = async (userId:number, pageToken:number|null): Promise<GetMyV
 
 export {
   putUserInfo,
+  putProfileImage,
   getMyVideos
 }; 

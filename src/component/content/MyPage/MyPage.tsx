@@ -63,7 +63,6 @@ const MyPage: React.FC<RouteComponentProps> = () => {
   } 
 
   
-
   const getContent = (state: MyPageState) => {
     switch(state.myPageCategory){
       case MyPageCategory.MY_VIDEO:
@@ -79,7 +78,7 @@ const MyPage: React.FC<RouteComponentProps> = () => {
         return (<div>my followee</div>);
     }
   }
-
+ 
 
   const MyInfoCard = (
     <div className="my_page_my_info_card">
