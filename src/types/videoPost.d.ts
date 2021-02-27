@@ -17,3 +17,8 @@ declare type VideoPostInfoWithUser = {
 declare type Tag = {
     tagName: string
 };
+
+declare type VideoPostsResponse = {
+    videoList: Array<VideoPostInfoWithUser>,
+    pageToken: number|null
+}
