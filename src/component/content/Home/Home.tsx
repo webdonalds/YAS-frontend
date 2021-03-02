@@ -15,7 +15,7 @@ enum VideoPostCategory {
 
 type VideoPostsState = {
   postCategory: VideoPostCategory,
-  videoPosts: Array<VideoPostInfo>
+  videoPosts: Array<VideoPostInfoWithUser>
   pageToken: number|null
 }
 
@@ -94,7 +94,7 @@ const Home: React.FC<RouteComponentProps> = () => {
             videoPostsState.videoPosts.map(post => (
               // TODO: tags 넣기
               <VideoPostCard id={post.id} title={post.title} userId={post.userId} videoId={post.videoId} description={post.description} 
-              totalLikes={post.totalLikes} createdAt={post.createdAt} updatedAt={post.updatedAt} tags={[]} key={post.id}/>
+              totalLikes={post.totalLikes} createdAt={post.createdAt} updatedAt={post.updatedAt} tags={post.tags} key={post.id} user={post.user}/>
             ))
           }
         </div>

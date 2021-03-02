@@ -7,7 +7,7 @@ type PutUserInfoResponse = {
 }
 
 type GetMyVideosResponse = {
-    videoList: Array<VideoPostInfo>,
+    videoList: Array<VideoPostInfoWithUser>,
     pageToken: number|null
 }
 
@@ -52,7 +52,7 @@ const putProfileImage = async (imagePath: string | null): Promise<ErrorResponse 
 
 const getMyVideos = async (userId:number, pageToken:number|null): Promise<GetMyVideosResponse | ErrorResponse> => {
     try{
-        const res = await axios.request<GetMyVideosResponse>({
+        const res = await axios.request({
             baseURL: API_URL,
             url: `/v1/post/user-videos/${userId}`,
             method: 'get',
@@ -60,6 +60,12 @@ const getMyVideos = async (userId:number, pageToken:number|null): Promise<GetMyV
                 pageToken: pageToken
             }
         })
+
+        for(let i=0; i<res.data.videoList.length; i++){
+            res.data.videoList[i].tags = res.data.videoList[i].Tags;
+            res.data.videoList[i].user = res.data.videoList[i].User;
+        }
+
         return res.data;
     } catch(error){
         return <ErrorResponse> error.response.data;
