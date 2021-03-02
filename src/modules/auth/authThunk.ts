@@ -28,9 +28,7 @@ const refresh = async (dispatch: any) => {
     }, JWT_REFRESH_FREQUENCY);
   } catch (e) {
     alert("Logouted. Please re-login");
-    axios.defaults.headers.common['x-access-token'] = null;
-    localStorageService.deleteUserTokenInLocalStorage();
-    dispatch(logoutRequest());
+    dispatch(logoutThunk());
   }
 }
 
@@ -49,6 +47,7 @@ const loginThunk = (code: string): ThunkAction<void, RootState, null, AuthAction
       refresh(dispatch);
     } catch (e) {
       dispatch(loginError(e));
+      dispatch(logoutThunk());
     }
   }
 }
@@ -56,6 +55,7 @@ const loginThunk = (code: string): ThunkAction<void, RootState, null, AuthAction
 const logoutThunk = (): ThunkAction<void, RootState, null, AuthAction> => {
   return async(dispatch) => {
     axios.defaults.headers.common['x-access-token'] = null;
+    localStorageService.deleteUserTokenInLocalStorage();
     dispatch(logoutRequest());
   }
 }
@@ -66,7 +66,7 @@ const getSavedLoginThunk = (): ThunkAction<void, RootState, null, AuthAction> =>
     const savedUserToken = localStorageService.getUserTokenFromLocalStorage();
 
     if(savedUserToken==null){
-      dispatch(logoutRequest());
+      dispatch(logoutThunk());
       return;
     }
   
@@ -77,9 +77,7 @@ const getSavedLoginThunk = (): ThunkAction<void, RootState, null, AuthAction> =>
     // if api call fails
     if('error' in userInfo){
       alert("Logouted. Please re-login");
-      axios.defaults.headers.common['x-access-token'] = null;
-      localStorageService.deleteUserTokenInLocalStorage();
-      dispatch(logoutRequest());
+      dispatch(logoutThunk());
     } else{
       dispatch(loginSuccess(userInfo, savedUserToken));
       refresh(dispatch);
