@@ -20,7 +20,7 @@ type AddVideoProps = {
 
 const AddVideo: React.FC<AddVideoProps> = (props) => {
   const { userInfo } = GetLogin();
-  const { id, url, title, description, tags, init, setUrl, setTitle, setDescription, addTag, deleteTag } = VideoHook();
+  const { initialized, id, url, title, description, tags, user, init, setUrl, setTitle, setDescription, addTag, deleteTag } = VideoHook();
   const [tag, setTag] = useState("");
 
   // mount될 때만 init함수가 실행되도록 하고 싶어서 lint warning을 없앴습니다.
@@ -34,6 +34,10 @@ const AddVideo: React.FC<AddVideoProps> = (props) => {
 
   if(userInfo == null) {
     alert("로그인이 필요한 페이지입니다.");
+    return <Redirect to="/"/>;
+  }
+  if(props.isUpdate && initialized && user?.id != userInfo.id) {
+    alert("본인의 계정만 수정 가능합니다.");
     return <Redirect to="/"/>;
   }
 
