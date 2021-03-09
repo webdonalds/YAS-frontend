@@ -5,6 +5,9 @@ type AuthTokenResponse = {
   auth: Tokens,
 };
 
+type RefreshResponse = {
+  yasAccessToken: string
+};
 
 const getAuthToken = async (code: string): Promise<UserLoginInfo> => {
   const res = await axios.request<AuthTokenResponse>({
@@ -26,6 +29,19 @@ const getAuthToken = async (code: string): Promise<UserLoginInfo> => {
   return ret;
 }
 
+const refreshAuthToken = async (refreshToken: string): Promise<string> => {
+  const res = await axios.request<RefreshResponse>({
+    baseURL: API_URL,
+    url: '/v1/auth/access-token',
+    method: 'get',
+    params: {
+      token: refreshToken,
+    },
+  });
+  return res.data.yasAccessToken;
+}
+
 export {
   getAuthToken,
+  refreshAuthToken,
 };
