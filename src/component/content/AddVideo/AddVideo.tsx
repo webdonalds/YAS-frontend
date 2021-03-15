@@ -7,7 +7,7 @@ import "./AddVideo.css";
 import { postVideo, modifyVideo, deleteVideo } from "../../../api/addVideo";
 import { maxTagCount, maxTagLength, titleMaxLength, titleMinLength, descriptionMaxLength, tagAllowedPattern } from "../../../constant/Addvideo";
 import { match, Redirect } from "react-router-dom";
-import { getYoutubeiframe, getYoutubeUrl } from "../../../util/youtube";
+import { getYoutubeIframeContainer, getYoutubeUrl } from "../../../util/youtube";
 
 type AddVideoPathVariable = {
   postId: string
@@ -53,7 +53,7 @@ const AddVideo: React.FC<AddVideoProps> = (props) => {
 
   // is memoization needed?
   const thumbnailView = (id != "") ? (<div className="add-video-thumbnail-container">
-    {getYoutubeiframe(id)}
+    {getYoutubeIframeContainer(id)}
   </div>) : (<div className="add-video-thumbnail-container">
     <div>
       <FaTimes className="add-video-thumbnail-times" />

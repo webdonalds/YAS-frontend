@@ -17,3 +17,16 @@ export const plugins = [
     filename: "./index.html"
   })
 ];
+
+export const theme = {
+  extend: {
+    spacing: {
+      '192': '48rem',
+      '9/10': '90%',
+      '1/2': '50%'
+    }
+  },
+  maxWidth: {
+    '9/10': '90%'
+  }
+};
