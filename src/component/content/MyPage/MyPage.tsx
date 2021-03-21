@@ -135,8 +135,8 @@ const MyPage: React.FC<RouteComponentProps> = () => {
             <Nav.Link eventKey="my_followee" onClick={handleMyFollowee}>팔로윙</Nav.Link>
           </Nav.Item>
         </Nav>
-        <div className="my_page_content_container">
-          {getContent(myPageState)}
+        <div className="p-10 grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-4 gap-3">
+          {getContent(myPageState)} 
         </div>
       </div>
     </div>
