@@ -1,58 +1,38 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { Card } from "react-bootstrap";
-import { FaTag, FaThumbsUp, FaEdit, FaTrash } from "react-icons/fa";
 import utils from "../../../../service/utils";
-import GetLogin from "../../../../hooks/GetLogin";
-
 import "./VideoPostCard.css";
 
 
 const VideoPostCard: React.FC<VideoPostInfoWithUser> = ( videoPost ) => {
-  const { userInfo } = GetLogin();
-
   const videoThumbnailUrl = utils.getYoutubeThumbnailUrl(videoPost.videoId);
   
   const getTagView = (tag: string, idx: number) => {
-    return (<span key={idx} className="video-tag">
-      {tag}
-    </span>);
+    return (
+      <span key={idx} className="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">
+        #{tag}
+      </span>
+    )
   };
 
   const tagsView = (
-    <Card.Text>
-      <FaTag />
+    <div className="px-6 pt-4 pb-2">
       {videoPost.tags.map((tag, idx) => getTagView(tag.tagName, idx))}
-    </Card.Text>
+    </div>
   );
-
-  const ownerButtons = (
-    <Card.Text>
-      <Link to={"/modify-video/" + videoPost.id}>
-        <FaEdit/>
-      </Link>
-      <FaTrash/>
-    </Card.Text>
-  )
-
 
   return (
     <Link to={"/video/" + videoPost.id} style={{ textDecoration: 'none', color: 'black'}}>
-      <Card style={{ width: '18rem', flexDirection: 'row' }}>
-        <Card.Img variant="top" src={videoThumbnailUrl}/>
-        <Card.Body style={{width: "100rem"}}>
-          <Card.Title>{videoPost.title} - post by {videoPost.user.nickname}</Card.Title>
-          <Card.Body>
-            <Card.Text>{videoPost.description}</Card.Text>
-            <Card.Text>{videoPost.createdAt}</Card.Text>
-            <Card.Text><FaThumbsUp/>{videoPost.totalLikes}</Card.Text>
-            {tagsView}
-          </Card.Body>
-        </Card.Body>
-        <Card.Body>
-          {userInfo && userInfo.id == videoPost.userId ? ownerButtons : null }
-        </Card.Body>
-      </Card>
+      <div className="rounded overflow-hidden shadow-lg">
+        <img className="w-full" src={videoThumbnailUrl}/>
+        <div className="px-6 py-4">
+          <div className="font-bold text-xl mb-2">{videoPost.title}</div>
+          <p className="text-gray-700 text-base">
+            {videoPost.description}
+          </p>
+        </div>
+        {tagsView}
+      </div>
     </Link>
   );
 }
