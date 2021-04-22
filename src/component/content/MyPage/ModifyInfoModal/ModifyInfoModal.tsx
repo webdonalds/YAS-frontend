@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { Redirect } from "react-router-dom";
 import { Button, Modal, Card } from 'react-bootstrap';
-import { AiFillEdit } from "react-icons/ai";
 import utils from "../../../../service/utils";
 import { putUserInfo, putProfileImage } from "../../../../api/myPage";
 import "./ModifyInfoModal.css";
@@ -154,8 +153,10 @@ const ModifyInfoModal: React.FC<UserData> = (userInfo) => {
 
 
   return (
-    <div>
-      <AiFillEdit className="modify_info_modal_show_button" onClick={showModal}/>
+    <div className="flex justify-center">
+      <button className="bg-white hover:bg-gray-700 text-gray-800 font-bold py-2 px-4 border border-gray-400 rounded relative" onClick={showModal}>
+        Edit My Info
+      </button>
       {modal}
     </div>
   );

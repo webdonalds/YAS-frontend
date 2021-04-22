@@ -81,14 +81,20 @@ const MyPage: React.FC<RouteComponentProps> = () => {
  
 
   const MyInfoCard = (
-    <div className="my_page_my_info_card">
-      <img src={userInfo.imagePath ? userInfo.imagePath : utils.defaultProfileImage} alt="test" className="img-thumbnail"/>
-      <div className="my_page_my_info_card_content">
-        <div>{userInfo.nickname}</div>
-        <div>{userInfo.aboutMe}</div>
+    <div className="max-w-md mx-auto overflow-hidden">
+      <div className="flex">
+        <div className="w-full p-2 py-10">
+          <div className="flex justify-center">
+            <img src={userInfo.imagePath ? userInfo.imagePath : utils.defaultProfileImage} alt="test" className="rounded-full w-44 h-44"/>
+          </div> 
+          <div className="flex flex-col text-center mt-3 mb-4">
+            <span className="text-2xl font-bold">{userInfo.nickname}</span>
+          </div>
+          <p className="px-8 text-center text-md text-gray-800 mb-4">{userInfo.aboutMe}</p>
+          <ModifyInfoModal id={userInfo.id} email={userInfo.email} nickname={userInfo.nickname} 
+          imagePath={userInfo.imagePath} aboutMe={userInfo.aboutMe}/>
+        </div>
       </div>
-      <ModifyInfoModal id={userInfo.id} email={userInfo.email} nickname={userInfo.nickname} 
-      imagePath={userInfo.imagePath} aboutMe={userInfo.aboutMe}/>
     </div>
   )
 
@@ -121,23 +127,21 @@ const MyPage: React.FC<RouteComponentProps> = () => {
   const handleMyFollowee = () => setMyPageState({myPageCategory: MyPageCategory.MY_FOLLOWEE});
 
   return (
-    <div className="my_page_container">
-      <div className="my_page_content">
-        {MyInfoCard}
-        <Nav variant="pills" defaultActiveKey="my_video">
-          <Nav.Item>
-            <Nav.Link eventKey="my_video" onClick={() => {loadMyVideo(myVideosState.pageToken)}}>내 영상</Nav.Link>
-          </Nav.Item>
-          <Nav.Item>
-            <Nav.Link eventKey="my_follower" onClick={handleMyFollower}>팔로워</Nav.Link>
-          </Nav.Item>
-          <Nav.Item>
-            <Nav.Link eventKey="my_followee" onClick={handleMyFollowee}>팔로윙</Nav.Link>
-          </Nav.Item>
-        </Nav>
-        <div className="my_page_content_container">
-          {getContent(myPageState)}
-        </div>
+    <div className="container mx-auto">
+      {MyInfoCard}
+      <Nav variant="pills" defaultActiveKey="my_video">
+        <Nav.Item>
+          <Nav.Link eventKey="my_video" onClick={() => {loadMyVideo(myVideosState.pageToken)}}>내 영상</Nav.Link>
+        </Nav.Item>
+        <Nav.Item>
+          <Nav.Link eventKey="my_follower" onClick={handleMyFollower}>팔로워</Nav.Link>
+        </Nav.Item>
+        <Nav.Item>
+          <Nav.Link eventKey="my_followee" onClick={handleMyFollowee}>팔로윙</Nav.Link>
+        </Nav.Item>
+      </Nav>
+      <div className="p-10 grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
+        {getContent(myPageState)} 
       </div>
     </div>
   );

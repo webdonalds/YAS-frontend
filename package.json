@@ -18,6 +18,7 @@
   },
   "homepage": "https://github.com/webdonalds/YAS-frontend#readme",
   "dependencies": {
+    "@tailwindcss/line-clamp": "^0.2.0",
     "@types/axios": "^0.14.0",
     "@types/bootstrap": "^5.0.1",
     "@types/react-bootstrap": "^0.32.25",

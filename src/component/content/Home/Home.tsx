@@ -78,26 +78,23 @@ const Home: React.FC<RouteComponentProps> = () => {
   useBottomScrollListener(loadMoreVideo);
   
   return (
-    <div className="home_container">
-      <div className="home_content">
-        <Nav variant="pills" defaultActiveKey="recent">
-          <Nav.Item>
-            <Nav.Link eventKey="recent" onClick={() => handleRecentVideoPostList(null)}>최신 영상</Nav.Link>
-          </Nav.Item>
-          <Nav.Item>
-            <Nav.Link eventKey="hot" onClick={handleHotVideoPostList}>인기 영상</Nav.Link>
-          </Nav.Item>
-        </Nav>
+    <div className="container mx-auto">
+      <Nav variant="pills" defaultActiveKey="recent">
+        <Nav.Item>
+          <Nav.Link eventKey="recent" onClick={() => handleRecentVideoPostList(null)}>최신 영상</Nav.Link>
+        </Nav.Item>
+        <Nav.Item>
+          <Nav.Link eventKey="hot" onClick={handleHotVideoPostList}>인기 영상</Nav.Link>
+        </Nav.Item>
+      </Nav>
 
-        <div className="home_video_list_container">
-          {
-            videoPostsState.videoPosts.map(post => (
-              // TODO: tags 넣기
-              <VideoPostCard id={post.id} title={post.title} userId={post.userId} videoId={post.videoId} description={post.description} 
-              totalLikes={post.totalLikes} createdAt={post.createdAt} updatedAt={post.updatedAt} tags={post.tags} key={post.id} user={post.user}/>
-            ))
-          }
-        </div>
+      <div className="p-10 grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
+        {
+          videoPostsState.videoPosts.map(post => (
+            <VideoPostCard id={post.id} title={post.title} userId={post.userId} videoId={post.videoId} description={post.description} 
+            totalLikes={post.totalLikes} createdAt={post.createdAt} updatedAt={post.updatedAt} tags={post.tags} key={post.id} user={post.user}/>
+          ))
+        }
       </div>
     </div>
   );
