@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Button, Modal } from 'react-bootstrap';
-import { FaList, FaArrowLeft, FaChevronDown } from 'react-icons/fa';
+import { FaArrowLeft, FaChevronDown } from 'react-icons/fa';
 import './AddVideoModal.css';
 
 import { Video, PlayList, getPlayList, getPlayLists, getLikeList, getSearchList } from '../../../api/addVideo';
@@ -237,9 +237,11 @@ const AddVideoModal: React.FC<AddVideoModalProps> = (props) => {
     </Modal>
   ) : null;
 
-  return (<div>
-    <div className="add-video-input-search-container">
-      <span className="badge bg-secondary add-video-input-search" onClick={()=>handleShow()}> <FaList /> 유튜브에서 찾아보기</span>
+  return (<div className="inline-block">
+    <div className="inline-block add-video-input-search-container">
+      <span className="inline-block rounded bg-main mt-1 mb-1 py-1 px-2.5 font-bold text-white text-sm text-center align-baseline cursor-pointer" onClick={()=>handleShow()}>
+        유튜브에서 찾아보기
+      </span>
     </div>
     {modal}
   </div>);

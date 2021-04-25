@@ -3,16 +3,6 @@
   text-align: left;
 }
 
-.add-video-input-search {
-  margin-top: 20px;
-  margin-bottom: 15px;
-  font-size: 15px;
-}
-
-.add-video-input-search:hover {
-  cursor: pointer;
-}
-
 .add-video-modal-body-container {
   height: 500px;
 }
