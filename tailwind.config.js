@@ -22,7 +22,7 @@ export const theme = {
   extend: {
     spacing: {
       '120': '30rem',
-      '144':'36rem',
+      '144': '36rem',
       '192': '48rem',
       '9/10': '90%',
       '4/5': '80%',
