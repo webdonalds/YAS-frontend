@@ -1,8 +1,10 @@
 import React, { useEffect } from "react";
 import { BsTag } from "react-icons/bs";
-import { match } from "react-router-dom";
+import { Link, match } from "react-router-dom";
+import GetLogin from "../../../hooks/GetLogin";
 import VideoHook from "../../../hooks/Video";
 import { getYoutubeIframeContainer } from "../../../util/youtube";
+import { BsPencil } from 'react-icons/bs';
 
 type VideoPathVariable = {
   postId: string
@@ -14,14 +16,24 @@ type VideoProps = {
 
 const Video: React.FC<VideoProps> = (props) => {
   const { id, title, description, tags, user, init } = VideoHook();
+  const postId = props.match.params.postId;
+  const { userInfo } = GetLogin();
+  const isMyVideo = user?.id == userInfo?.id;
 
   useEffect(() => {
-    init(props.match.params.postId);
+    init(postId);
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const titleView = (
     <div className="mt-4 font-sans font-bold text-3xl">
-      {title}
+      <div className="inline-block">
+        {title}
+      </div>
+      {
+        isMyVideo
+          ? <div className="float-right"><Link to={`/modify-video/${postId}`}><BsPencil className="cursor-pointer" /></Link></div>
+          : null
+      }
     </div>
   );
 
