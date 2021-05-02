@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { withRouter, RouteComponentProps, Redirect } from "react-router-dom";
-import { Nav } from "react-bootstrap";
 import GetLogin from "../../../hooks/GetLogin";
 import utils from "../../../service/utils";
 import { getMyVideos } from '../../../api/myPage';
 import { useBottomScrollListener } from 'react-bottom-scroll-listener';
+import NavBar, { NavOption } from '../Commons/NavBar/NavBar';
 
 import ModifyInfoModal from "./ModifyInfoModal/ModifyInfoModal"
 import VideoPostCard from '../Commons/VideoPostCard/VideoPostCard';
@@ -126,20 +126,16 @@ const MyPage: React.FC<RouteComponentProps> = () => {
 
   const handleMyFollowee = () => setMyPageState({myPageCategory: MyPageCategory.MY_FOLLOWEE});
 
+  const options: Array<NavOption> = [
+    { label: "내 영상", eventKey: "my_video", onClickHandler: () => loadMyVideo(myVideosState.pageToken) },
+    { label: "팔로워", eventKey: "my_follower", onClickHandler: () => handleMyFollower() },
+    { label: "팔로윙", eventKey: "my_followee", onClickHandler: () => handleMyFollowee() }
+  ]
+
   return (
     <div className="container mx-auto">
       {MyInfoCard}
-      <Nav variant="pills" defaultActiveKey="my_video">
-        <Nav.Item>
-          <Nav.Link eventKey="my_video" onClick={() => {loadMyVideo(myVideosState.pageToken)}}>내 영상</Nav.Link>
-        </Nav.Item>
-        <Nav.Item>
-          <Nav.Link eventKey="my_follower" onClick={handleMyFollower}>팔로워</Nav.Link>
-        </Nav.Item>
-        <Nav.Item>
-          <Nav.Link eventKey="my_followee" onClick={handleMyFollowee}>팔로윙</Nav.Link>
-        </Nav.Item>
-      </Nav>
+      <NavBar navOptions={options}/>
       <div className="p-10 grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
         {getContent(myPageState)} 
       </div>
