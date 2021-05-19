@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { getVideo } from '../api/addVideo';
 import { RootState } from '../modules';
-import { initialize, setValue, addTag as addTagToRedux, deleteTag as deleteTagToRedux, setUser } from '../modules/video/video';
+import { initialize, setValue, addTag as addTagToRedux, deleteTag as deleteTagToRedux, setUser, setNumberValue } from '../modules/video/video';
 import useDebounce from '../util/debounce';
 import { getYoutubeUrl } from '../util/youtube';
 
@@ -15,7 +15,7 @@ function getVideoId(youtubeUrl: string): string {
 }
 
 const VideoHook = () => {
-  const { id, url, title, description, tags, user } = useSelector((state: RootState) => state.video);
+  const { id, url, title, description, tags, user, totalLikes } = useSelector((state: RootState) => state.video);
   const dispatch = useDispatch();
   const [initialized, setInitialized] = useState(false);
 
@@ -31,6 +31,7 @@ const VideoHook = () => {
       post.tags.forEach((tag) => {
         addTag(tag.tagName);
       });
+      setTotalLikes(post.totalLikes);
       setInitialized(true);
     }
   }
@@ -62,6 +63,10 @@ const VideoHook = () => {
     dispatch(deleteTagToRedux(tag));
   }
 
+  const setTotalLikes = (likes: number) => {
+    dispatch(setNumberValue('totalLikes', likes));
+  }
+
   return {
     initialized,
     id,
@@ -70,6 +75,7 @@ const VideoHook = () => {
     description,
     tags,
     user,
+    totalLikes,
     init,
     setUrl,
     setTitle,
