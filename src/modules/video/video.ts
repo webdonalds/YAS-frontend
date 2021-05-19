@@ -34,6 +34,15 @@ export const setValue = createAction(
     }
   }
 )();
+export const setNumberValue = createAction(
+  SET_VALUE,
+  (name: string, value: number) => {
+    return {
+      name: name,
+      value: value,
+    }
+  }
+)();
 export const setUser = createAction(
   SET_USER,
   (user: UserData) => {
@@ -56,6 +65,7 @@ type VideoState = {
   description: string,
   tags: Array<string>,
   user: UserData | null,
+  totalLikes: number,
 };
 
 const initialState = {
@@ -65,6 +75,7 @@ const initialState = {
   description: "",
   tags: [],
   user: null,
+  totalLikes: 0,
 };
 
 const addVideo = createReducer<VideoState, VideoAction>(initialState, {
@@ -94,7 +105,8 @@ const addVideo = createReducer<VideoState, VideoAction>(initialState, {
     title: "",
     description: "",
     tags: [],
-    user: null
+    user: null,
+    totalLikes: 0,
   }),
 });
 
