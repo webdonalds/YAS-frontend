@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Modal } from 'react-bootstrap';
-import { FaList, FaArrowLeft, FaChevronDown } from 'react-icons/fa';
-import './AddVideoModal.css';
+import { Modal } from 'react-bootstrap';
+import { FaArrowLeft, FaChevronRight, FaChevronDown, FaSearch } from 'react-icons/fa';
 
 import { Video, PlayList, getPlayList, getPlayLists, getLikeList, getSearchList } from '../../../api/addVideo';
 import useDebounce from '../../../util/debounce';
@@ -27,9 +26,19 @@ const VideoListModal: React.FC<VideoListModalProps> = (props) => {
     props.setVideo(id);
     props.handleClose();
   }
+
+  // nbsp; for margin
   return (
-    <div>
-      {props.videos.map((val, idx) => (<div key={idx} onClick={()=>handleClick(val.id)}>{val.title}</div>))}
+    <div className="divide-y text-gray-500">
+      {props.videos.map((val, idx) => (<div key={idx} onClick={()=>handleClick(val.id)} className="py-2 cursor-pointer">
+        <img className="h-32 float-left" src={`https://img.youtube.com/vi/${val.id}/0.jpg`} />
+        <div className="w-2 float-left">&nbsp;</div>
+        <div className="inline-table">
+          <div className="table-cell h-32 align-middle text-base break-words">
+            {val.title}
+          </div>
+        </div>
+      </div>))}
     </div>
   );
 };
@@ -44,6 +53,7 @@ type AddVideoModalState = {
   playLists: Array<PlayList>,
   playListsNextPageToken: string | undefined,
   playListId: string,
+  playListName: string,
   videos: Array<Video>,
   videoNextPageToken: string | undefined,
 }
@@ -56,6 +66,7 @@ const AddVideoModal: React.FC<AddVideoModalProps> = (props) => {
     playLists: [],
     playListsNextPageToken: undefined,
     playListId: "",
+    playListName: "",
     videos: [],
     videoNextPageToken: undefined,
   });
@@ -67,6 +78,7 @@ const AddVideoModal: React.FC<AddVideoModalProps> = (props) => {
       playLists: [],
       playListsNextPageToken: undefined,
       playListId: "",
+      playListName: "",
       videos: [],
       videoNextPageToken: undefined,
     });
@@ -89,17 +101,19 @@ const AddVideoModal: React.FC<AddVideoModalProps> = (props) => {
       playListsNextPageToken: response.nextPageToken,
       videos: [],
       playListId: "",
+      playListName: "",
       videoNextPageToken: undefined,
     });
   };
 
-  const handlePlayList = async (playListId: string, nextPageToken: string | undefined = undefined) => {
+  const handlePlayList = async (playListId: string, playListName: string, nextPageToken: string | undefined = undefined) => {
     const response = await getPlayList(playListId, nextPageToken);
     setCategoryState({
       ...categoryState,
       category: AddVideoModalCategory.PLAYLIST,
       videos: categoryState.videos.concat(response.items),
       playListId: playListId,
+      playListName: playListName,
       videoNextPageToken: response.nextPageToken,
     });
   };
@@ -155,50 +169,60 @@ const AddVideoModal: React.FC<AddVideoModalProps> = (props) => {
 
   const nextPageButton = (state: AddVideoModalState) => {
     if(state.videoNextPageToken == undefined)  return null;
+
+    const getIcon = (onClick: ()=>void) => {
+      return (<div onClick={onClick} className="w-full pt-2 cursor-pointer">
+        <FaChevronDown className="block m-0 m-auto text-2xl" />
+      </div>);
+    }
     switch(state.category) {
       case AddVideoModalCategory.NONE:
         return null;
       case AddVideoModalCategory.PLAYLISTS:
-        return (<div onClick={()=>handlePlayLists(categoryState.videoNextPageToken)}><FaChevronDown /></div>);
+        return getIcon(()=>handlePlayLists(categoryState.videoNextPageToken));
       case AddVideoModalCategory.PLAYLIST:
-        return (<div onClick={()=>handlePlayList(categoryState.playListId, categoryState.videoNextPageToken)}><FaChevronDown /></div>);
+        return getIcon(()=>handlePlayList(categoryState.playListId, categoryState.playListName, categoryState.videoNextPageToken));
       case AddVideoModalCategory.LIKELIST:
-        return (<div onClick={()=>handleLikeList(categoryState.videoNextPageToken)}><FaChevronDown /></div>);
+        return getIcon(()=>handleLikeList(categoryState.videoNextPageToken));
       case AddVideoModalCategory.SEARCHLIST:
-        return (<div onClick={()=>handleSearch(keyword, categoryState.videoNextPageToken)}><FaChevronDown/> </div>);
+        return getIcon(()=>handleSearch(keyword, categoryState.videoNextPageToken));
     }
   }
 
   const renderSwitchBody = (state: AddVideoModalState) => {
+    const getListButton = (content: string, onClick: () => void, key: string | number | undefined = undefined) => (
+      <div onClick={onClick} key={key} className="flex justify-between align-baseline py-3 cursor-pointer text-gray-500">
+        <span>{content}</span>
+        <FaChevronRight className="mt-1" />
+      </div>
+    );
+
     switch(state.category) {
       case AddVideoModalCategory.NONE:
         return (
-          <div>
-            <div onClick={() => handlePlayLists()}>플레이리스트에서 찾기</div>
-            <div onClick={() => handleLikeList()}>좋아요한 목록에서 찾기</div>
-            <div onClick={() => handleSearchList()}>검색해서 찾기</div>
+          <div className="divide-y">
+            {getListButton("플레이리스트에서 찾기", () => handlePlayLists())}
+            {getListButton("좋아요한 목록에서 찾기", () => handleLikeList())}
+            {getListButton("검색해서 찾기", () => handleSearchList())}
           </div>
         );
       case AddVideoModalCategory.PLAYLISTS:
         return (
-          <div>
-            <FaArrowLeft onClick={initCategoryState}/>
-            {categoryState.playLists.map((val, idx) => (<div key={idx} onClick={() => handlePlayList(val.id)}>{val.snippet.title}</div>))}
+          <div className="divide-y">
+            {categoryState.playLists.map((val, idx) => getListButton(val.snippet.title, ()=>handlePlayList(val.id, val.snippet.title), idx))}
             {nextPageButton(state)}
           </div>
         );
       case AddVideoModalCategory.PLAYLIST:
         return (
-          <div>
-            <FaArrowLeft onClick={backToPlayLists}/>
+          <div className="divide-y">
             <VideoListModal videos={categoryState.videos} handleClose={handleClose} setVideo={props.setVideo} />
             {nextPageButton(state)}
           </div>
         );
       case AddVideoModalCategory.LIKELIST:
         return (
-          <div>
-            <FaArrowLeft onClick={initCategoryState}/>
+          <div className="divide-y">
             <VideoListModal videos={categoryState.videos} handleClose={handleClose} setVideo={props.setVideo} />
             {nextPageButton(state)}
           </div>
@@ -206,16 +230,46 @@ const AddVideoModal: React.FC<AddVideoModalProps> = (props) => {
       case AddVideoModalCategory.SEARCHLIST:
         return (
           <div>
-            <FaArrowLeft onClick={initCategoryState}/>
-            <input value={keyword} onChange={handleChangeKeyword}/>
-            <VideoListModal videos={categoryState.videos} handleClose={handleClose} setVideo={props.setVideo} />
-            {nextPageButton(state)}
+            <input value={keyword} onChange={handleChangeKeyword} className="inline-block h-8 my-2 pl-2 border"/>
+            <FaSearch className="inline-block h-8 ml-2 text-lg" />
+            <div className="divide-y">
+              <VideoListModal videos={categoryState.videos} handleClose={handleClose} setVideo={props.setVideo} />
+              {nextPageButton(state)}
+            </div>
           </div>
         );
     }
   };
 
   const handleClose = () => setShow(false);
+  const handleBack = (state: AddVideoModalState) => {
+    switch(state.category) {
+      case AddVideoModalCategory.NONE:
+        return handleClose;
+      case AddVideoModalCategory.PLAYLISTS:
+        return initCategoryState;
+      case AddVideoModalCategory.PLAYLIST:
+        return backToPlayLists;
+      case AddVideoModalCategory.LIKELIST:
+        return initCategoryState;
+      case AddVideoModalCategory.SEARCHLIST:
+        return initCategoryState;
+    }
+  }
+  const getTitle = (state: AddVideoModalState) => {
+    switch(state.category) {
+      case AddVideoModalCategory.NONE:
+        return "유튜브에서 찾아보기";
+      case AddVideoModalCategory.PLAYLISTS:
+        return "플레이리스트";
+      case AddVideoModalCategory.PLAYLIST:
+        return state.playListName;
+      case AddVideoModalCategory.LIKELIST:
+        return "좋아요";
+      case AddVideoModalCategory.SEARCHLIST:
+        return "검색";
+    }
+  }
   const handleShow = () => {
     initCategoryState();
     setShow(true);
@@ -223,23 +277,23 @@ const AddVideoModal: React.FC<AddVideoModalProps> = (props) => {
   
   const modal = show ? (
     <Modal show={show} onHide={handleClose} centered scrollable>
-      <Modal.Body className="add-video-modal-body-container">
+      <Modal.Header className="block">
+        <FaArrowLeft onClick={handleBack(categoryState)} className="inline-block cursor-pointer text-lg" />
+        <div className="inline-block ml-2">
+          {getTitle(categoryState)}
+        </div>
+      </Modal.Header>
+      <Modal.Body className="h-144 pt-0">
         {renderSwitchBody(categoryState)}
       </Modal.Body>
-      <Modal.Footer className="add-video-modal-footer">
-        <Button variant="secondary" onClick={handleClose}>
-          뒤로가기
-        </Button>
-        <Button variant="primary" onClick={handleClose}>
-          추가하기
-        </Button>
-      </Modal.Footer>
     </Modal>
   ) : null;
 
-  return (<div>
-    <div className="add-video-input-search-container">
-      <span className="badge bg-secondary add-video-input-search" onClick={()=>handleShow()}> <FaList /> 유튜브에서 찾아보기</span>
+  return (<div className="inline-block">
+    <div className="inline-block">
+      <span className="inline-block rounded bg-main mt-1 mb-1 py-1 px-2.5 font-bold text-white text-sm text-center align-baseline cursor-pointer" onClick={()=>handleShow()}>
+        유튜브에서 찾아보기
+      </span>
     </div>
     {modal}
   </div>);
