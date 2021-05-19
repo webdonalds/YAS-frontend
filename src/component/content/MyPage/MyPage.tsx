@@ -129,7 +129,7 @@ const MyPage: React.FC<RouteComponentProps> = () => {
   const options: Array<NavOption> = [
     { label: "내 영상", eventKey: "my_video", onClickHandler: () => loadMyVideo(myVideosState.pageToken) },
     { label: "팔로워", eventKey: "my_follower", onClickHandler: () => handleMyFollower() },
-    { label: "팔로윙", eventKey: "my_followee", onClickHandler: () => handleMyFollowee() }
+    { label: "팔로잉", eventKey: "my_followee", onClickHandler: () => handleMyFollowee() }
   ]
 
   return (
