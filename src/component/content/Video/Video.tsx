@@ -1,10 +1,11 @@
 import React, { useEffect } from "react";
-import { BsTag } from "react-icons/bs";
 import { Link, match } from "react-router-dom";
 import GetLogin from "../../../hooks/GetLogin";
 import VideoHook from "../../../hooks/Video";
 import { getYoutubeIframeContainer } from "../../../util/youtube";
-import { BsPencil } from 'react-icons/bs';
+import { BsTag, BsPencil } from 'react-icons/bs';
+import { FaRegThumbsUp, FaThumbsUp } from 'react-icons/fa'
+import LikeHook from "../../../hooks/Like";
 
 type VideoPathVariable = {
   postId: string
@@ -15,13 +16,15 @@ type VideoProps = {
 };
 
 const Video: React.FC<VideoProps> = (props) => {
-  const { id, title, description, tags, user, init } = VideoHook();
+  const { id, title, description, tags, user, totalLikes, init:videoInit } = VideoHook();
+  const { like:myLike, init:likeInit, setLike } = LikeHook();
   const postId = props.match.params.postId;
   const { userInfo } = GetLogin();
   const isMyVideo = user?.id == userInfo?.id;
 
   useEffect(() => {
-    init(postId);
+    videoInit(postId);
+    likeInit(postId);
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const titleView = (
@@ -75,10 +78,27 @@ const Video: React.FC<VideoProps> = (props) => {
     </span>);
   };
 
-  const tagsView = (
+  const getLikeView = () => {
+    const iconClassName = "inline cursor-pointer w-5 h-5";
+    const onClickEvent = () => {
+      if(userInfo == null)  return;
+      setLike(postId, !myLike);
+    }
+    return (<div className="float-right">
+      {myLike
+        ? <FaThumbsUp className={iconClassName} onClick={onClickEvent} />
+        : <FaRegThumbsUp className={iconClassName} onClick={onClickEvent} />}
+      <div className="inline-block ml-3">
+        {totalLikes}
+      </div>
+    </div>);
+  };
+
+  const infoView = (
     <div className="mt-4 ml-auto mr-auto">
       <BsTag className="inline-block ml-3 w-7 h-7"/>
       {tags.map((tag, idx) => getTagView(tag, idx))}
+      {getLikeView()}
     </div>
   );
 
@@ -89,7 +109,7 @@ const Video: React.FC<VideoProps> = (props) => {
       {userProfileView}
       {descriptionView}
     </div>
-    {tagsView}
+    {infoView}
   </div>);
 }
 
