@@ -59,9 +59,12 @@ const Header: React.FC<RouteComponentProps> = ({history}) => {
     </li>
   )
 
+  const logoutButtonClass = "text-lg px-4 py-2 rounded-md text-white bg-purple-400 cursor-pointer mt-4 lg:mt-0 "
+  const logoutButtonHoverClass = "hover:text-white hover:bg-purple-500 hover:border-purple-500 "
+
   const logoutButton = (
     <li className="pr-5 pl-10">
-      <span onClick={onLogout} className="text-lg px-4 py-2 leading-none border rounded text-black border-black hover:text-teal hover:bg-gray-500 cursor-pointer mt-4 lg:mt-0">
+      <span onClick={onLogout} className={logoutButtonClass + logoutButtonHoverClass}>
         Logout
       </span>
     </li>

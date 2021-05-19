@@ -78,26 +78,29 @@ const ModifyInfoModal: React.FC<UserData> = (userInfo) => {
     })
   }
 
-  
+  const labelClass = "w-1/5 inline-block text-base	bg-purple-600 text-white rounded text-center px-2 py-1.5 mr-4 font-bold";
+  const inputClass = "w-3/4 text-xl inline-block h-full pb-1 px-1 rounded border-2";
+  const lineContainerClass = "mb-3.5";
+
   const nicknameInput = (
-    <div className="modify_info_card_input_container">
-      <span className="badge bg-primary">닉네임</span>
-      <input name="nickname" value={userInfoState.nickname} onChange={handleNicknameChange}/>
+    <div className={lineContainerClass}>
+      <span className={labelClass}>닉네임</span>
+      <input className={inputClass} name="nickname" value={userInfoState.nickname} onChange={handleNicknameChange}/>
     </div>
   );
 
   const aboutMeInput = (
-    <div className="modify_info_card_input_container">
-      <span className="badge bg-primary">내 소개</span>
-      <input name="aboutMe" value={userInfoState.aboutMe} onChange={handleAboutMeChange}/>
+    <div className={lineContainerClass}>
+      <span className={labelClass}>내 소개</span>
+      <input className={inputClass} name="aboutMe" value={userInfoState.aboutMe} onChange={handleAboutMeChange}/>
     </div>
   );
 
   const imagePathInput = (
     <>
-      <div className="modify_info_card_input_container">
-        <span className="badge bg-primary">프사 파일</span>
-        <input type="file" name="imagePath" accept="image/*" onChange={e => handleimagePathChange(e)}/>
+      <div className={lineContainerClass}>
+        <span className={labelClass}>프사 파일</span>
+        <input className={inputClass} type="file" name="imagePath" accept="image/*" onChange={e => handleimagePathChange(e)}/>
       </div>
       <Button variant="danger" onClick={handleimagePathDelete}>프로필 사진 삭제</Button>
     </>
@@ -105,7 +108,7 @@ const ModifyInfoModal: React.FC<UserData> = (userInfo) => {
 
   const modifyInfoCard = (
     <Card>
-      <Card.Img className="modify_info_card_img" variant="top" src={userInfoState.imagePath ? userInfoState.imagePath : utils.defaultProfileImage}/>
+      <Card.Img className="modify_info_card_img my-4" variant="top" src={userInfoState.imagePath ? userInfoState.imagePath : utils.defaultProfileImage}/>
       <Card.Body>
         {nicknameInput}
         {aboutMeInput}
@@ -142,11 +145,11 @@ const ModifyInfoModal: React.FC<UserData> = (userInfo) => {
 
   const modal = show ? (
     <Modal show={show} onHide={hideModal} centered scrollable>
-      <Modal.Body>
+      <Modal.Body className="p-2">
         {modifyInfoCard}
       </Modal.Body>
       <Modal.Footer>
-        <Button onClick={() => handleMyInfoModify()}>내 정보 수정하기</Button>
+        <Button className="bg-purple-500 border-purple-500 hover:bg-purple-600 hover:border-purple-600" onClick={() => handleMyInfoModify()}>수정하기</Button>
       </Modal.Footer>
     </Modal>
   ) : null;
@@ -154,7 +157,7 @@ const ModifyInfoModal: React.FC<UserData> = (userInfo) => {
 
   return (
     <div className="flex justify-center">
-      <button className="bg-white hover:bg-gray-700 text-gray-800 font-bold py-2 px-4 border border-gray-400 rounded relative" onClick={showModal}>
+      <button className="bg-white text-gray-800 font-bold py-2 px-4 border border-gray-400 rounded relative hover:bg-purple-700" onClick={showModal}>
         Edit My Info
       </button>
       {modal}

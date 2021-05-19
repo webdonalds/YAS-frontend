@@ -2,8 +2,8 @@ import React, { useState, useEffect } from "react";
 import { withRouter, RouteComponentProps } from "react-router-dom";
 import VideoPostCard from "../Commons/VideoPostCard/VideoPostCard";
 import { getRecentVideoPosts, getHotVideoPosts } from '../../../api/home';
-import { Nav } from 'react-bootstrap';
 import { useBottomScrollListener } from 'react-bottom-scroll-listener';
+import NavBar, { NavOption } from '../Commons/NavBar/NavBar';
 
 import "./Home.css";
 
@@ -12,13 +12,11 @@ enum VideoPostCategory {
   HOT_POSTS
 }
 
-
 type VideoPostsState = {
   postCategory: VideoPostCategory,
   videoPosts: Array<VideoPostInfoWithUser>
   pageToken: number|null
 }
-
 
 const Home: React.FC<RouteComponentProps> = () => {
   const [videoPostsState, setVideoPostsState ] = useState<VideoPostsState>({
@@ -74,19 +72,21 @@ const Home: React.FC<RouteComponentProps> = () => {
     }
   }
 
+  const options: Array<NavOption> = [
+    {
+      label: "최신 영상", eventKey: "recent", onClickHandler: () => handleRecentVideoPostList(null)
+    },
+    { 
+      label: "인기 영상", eventKey: "hot", onClickHandler: () => handleHotVideoPostList()
+    }
+  ]
+
   // handle end of the scroll : for infinite scroll
   useBottomScrollListener(loadMoreVideo);
   
   return (
     <div className="container mx-auto">
-      <Nav variant="pills" defaultActiveKey="recent">
-        <Nav.Item>
-          <Nav.Link eventKey="recent" onClick={() => handleRecentVideoPostList(null)}>최신 영상</Nav.Link>
-        </Nav.Item>
-        <Nav.Item>
-          <Nav.Link eventKey="hot" onClick={handleHotVideoPostList}>인기 영상</Nav.Link>
-        </Nav.Item>
-      </Nav>
+      <NavBar navOptions={options}/>
 
       <div className="p-10 grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
         {
