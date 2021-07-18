@@ -67,6 +67,10 @@ const VideoHook = () => {
     dispatch(setNumberValue('totalLikes', likes));
   }
 
+  const addLikes = (count: number) => {
+    dispatch(setNumberValue('totalLikes', totalLikes + count))
+  }
+
   return {
     initialized,
     id,
@@ -82,6 +86,7 @@ const VideoHook = () => {
     setDescription,
     addTag,
     deleteTag,
+    addLikes,
   }
 }
 

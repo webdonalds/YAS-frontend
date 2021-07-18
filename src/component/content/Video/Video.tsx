@@ -16,7 +16,7 @@ type VideoProps = {
 };
 
 const Video: React.FC<VideoProps> = (props) => {
-  const { id, title, description, tags, user, totalLikes, init:videoInit } = VideoHook();
+  const { id, title, description, tags, user, totalLikes, init:videoInit, addLikes } = VideoHook();
   const { like:myLike, init:likeInit, setLike } = LikeHook();
   const postId = props.match.params.postId;
   const { userInfo } = GetLogin();
@@ -83,6 +83,7 @@ const Video: React.FC<VideoProps> = (props) => {
     const onClickEvent = () => {
       if(userInfo == null)  return;
       setLike(postId, !myLike);
+      addLikes(myLike ? -1 : 1);
     }
     return (<div className="float-right">
       {myLike
