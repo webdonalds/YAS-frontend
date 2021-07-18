@@ -70,8 +70,7 @@ const getSavedLoginThunk = (): ThunkAction<void, RootState, null, AuthAction> =>
       return;
     }
   
-    axios.defaults.headers.common['x-access-token'] = savedUserToken.yasAccessToken;
-    
+    await refresh(dispatch);
     const userInfo = await getUserInfo();
 
     // if api call fails
@@ -80,7 +79,6 @@ const getSavedLoginThunk = (): ThunkAction<void, RootState, null, AuthAction> =>
       dispatch(logoutThunk());
     } else{
       dispatch(loginSuccess(userInfo, savedUserToken));
-      refresh(dispatch);
     }
   }
 }
