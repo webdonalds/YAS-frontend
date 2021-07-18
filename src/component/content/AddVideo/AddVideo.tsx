@@ -29,7 +29,7 @@ const AddVideo: React.FC<AddVideoProps> = (props) => {
     } else {
       init(null);
     }
-  }, [init, props.isUpdate, props.match.params.postId]);
+  }, [props.isUpdate, props.match.params.postId]); // eslint-disable-line react-hooks/exhaustive-deps
 
   if (userInfo == null) {
     alert("로그인이 필요한 페이지입니다.");
