@@ -23,14 +23,13 @@ const AddVideo: React.FC<AddVideoProps> = (props) => {
   const { initialized, id, url, title, description, tags, user, init, setUrl, setTitle, setDescription, addTag, deleteTag } = VideoHook();
   const [tag, setTag] = useState("");
 
-  // mount될 때만 init함수가 실행되도록 하고 싶어서 lint warning을 없앴습니다.
   useEffect(() => {
     if (props.isUpdate) {
       init(props.match.params.postId);
     } else {
       init(null);
     }
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [init, props.isUpdate, props.match.params.postId]);
 
   if (userInfo == null) {
     alert("로그인이 필요한 페이지입니다.");
