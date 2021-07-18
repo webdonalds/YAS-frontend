@@ -3,7 +3,7 @@ import VideoHook from "../../../hooks/Video";
 import AddVideoModal from "./AddVideoModal";
 import GetLogin from "../../../hooks/GetLogin";
 import { FaTimes } from 'react-icons/fa';
-import { postVideo, modifyVideo, deleteVideo } from "../../../api/addVideo";
+import { PostVideoResponse ,postVideo, modifyVideo, deleteVideo } from "../../../api/addVideo";
 import { maxTagCount, maxTagLength, titleMaxLength, titleMinLength, descriptionMaxLength, tagAllowedPattern } from "../../../constant/Addvideo";
 import { match, Redirect } from "react-router-dom";
 import { getYoutubeIframeContainer, getYoutubeUrl } from "../../../util/youtube";
@@ -160,20 +160,17 @@ const AddVideo: React.FC<AddVideoProps> = (props) => {
     }
 
     // TODO: error handling
-    let ok = false;
+    let response: PostVideoResponse;
     if (props.isUpdate) {
-      ok = await modifyVideo(props.match.params.postId, title, description, tags);
-      if (!ok) {
-        alert("알 수 없는 에러가 발생하였습니다.");
-        return;
-      }
+      response = await modifyVideo(props.match.params.postId, title, description, tags);
     } else {
-      ok = await postVideo(id, title, description, tags);
-      if (!ok) {
-        alert("알 수 없는 에러가 발생하였습니다.");
-        return;
-      }
+      response = await postVideo(id, title, description, tags);
     }
+    if (!response.ok) {
+      alert("알 수 없는 에러가 발생하였습니다.");
+      return;
+    }
+    const postId = response.postId;
 
     // TODO: 동영상 페이지로 리다이렉트
     alert("등록이 완료되었습니다.");
