@@ -9,11 +9,17 @@ import { getUserInfo } from '../../api/user';
 const JWT_EXPIRY_TIME = 3600*1000;
 const JWT_REFRESH_FREQUENCY = JWT_EXPIRY_TIME / 2;
 
+let refreshTimeOutID = -1
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const refresh = async (dispatch: any) => {
   const savedUserToken = localStorageService.getUserTokenFromLocalStorage();
   if(savedUserToken == null) {
     return;
+  }
+
+  if(refreshTimeOutID != -1) {
+    window.clearTimeout(refreshTimeOutID)
   }
 
   try {
@@ -23,7 +29,7 @@ const refresh = async (dispatch: any) => {
 
     axios.defaults.headers.common['x-access-token'] = accessToken;
 
-    setTimeout(() => {
+    refreshTimeOutID = window.setTimeout(() => {
       refresh(dispatch);
     }, JWT_REFRESH_FREQUENCY);
   } catch (e) {
@@ -70,8 +76,7 @@ const getSavedLoginThunk = (): ThunkAction<void, RootState, null, AuthAction> =>
       return;
     }
   
-    axios.defaults.headers.common['x-access-token'] = savedUserToken.yasAccessToken;
-    
+    await refresh(dispatch);
     const userInfo = await getUserInfo();
 
     // if api call fails
@@ -80,7 +85,6 @@ const getSavedLoginThunk = (): ThunkAction<void, RootState, null, AuthAction> =>
       dispatch(logoutThunk());
     } else{
       dispatch(loginSuccess(userInfo, savedUserToken));
-      refresh(dispatch);
     }
   }
 }
