@@ -89,10 +89,27 @@ const getMyFollowers = async (userId:number, pageToken:number|null): Promise<Fol
     }
 }
 
+const getMyFollowees = async (userId:number, pageToken:number|null): Promise<FollowListResponse | ErrorResponse> => {
+    try{
+        const res = await axios.request({
+            baseURL: API_URL,
+            url: `/v1/follow/followeesByFollower/${userId}`,
+            method: 'get',
+            params: {
+                pageToken: pageToken
+            }
+        })
+
+        return res.data;
+    } catch(error){
+        return <ErrorResponse> error.response.data;
+    }
+}
 
 export {
   putUserInfo,
   putProfileImage,
   getMyVideos,
-  getMyFollowers
+  getMyFollowers,
+  getMyFollowees,
 }; 
