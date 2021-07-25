@@ -2,12 +2,13 @@ import React, { useState, useEffect } from "react";
 import { withRouter, RouteComponentProps, Redirect } from "react-router-dom";
 import GetLogin from "../../../hooks/GetLogin";
 import utils from "../../../service/utils";
-import { getMyVideos, getMyFollowers } from '../../../api/myPage';
+import { getMyVideos, getMyFollowers, getMyFollowees } from '../../../api/myPage';
 import { useBottomScrollListener } from 'react-bottom-scroll-listener';
 import NavBar, { NavOption } from '../Commons/NavBar/NavBar';
 
 import ModifyInfoModal from "./ModifyInfoModal/ModifyInfoModal"
 import VideoPostCard from '../Commons/VideoPostCard/VideoPostCard';
+import FollowCard from '../Commons/FollowCard/FollowCard';
 import "./MyPage.css";
 
 
@@ -26,8 +27,8 @@ type MyVideosState = {
   pageToken: number|null
 }
 
-type MyFollowersState = {
-  myFollowers: Array<FollowInfo>,
+type MyFollowsState = {
+  follows: Array<FollowInfo>,
   pageToken: number|null
 }
 
@@ -43,8 +44,13 @@ const MyPage: React.FC<RouteComponentProps> = () => {
     pageToken: null
   });
 
-  const [ myFollowersState, setMyFollowersState ] = useState<MyFollowersState>({
-    myFollowers: [],
+  const [ myFollowersState, setMyFollowersState ] = useState<MyFollowsState>({
+    follows: [],
+    pageToken: null
+  });
+
+  const [ myFolloweesState, setMyFolloweesState ] = useState<MyFollowsState>({
+    follows: [],
     pageToken: null
   });
 
@@ -59,6 +65,12 @@ const MyPage: React.FC<RouteComponentProps> = () => {
     switch(myPageState.myPageCategory){
       case MyPageCategory.MY_VIDEO:
         loadMyVideo(myVideosState.pageToken);
+        break;
+      case MyPageCategory.MY_FOLLOWER:
+        loadMyFollower(myFollowersState.pageToken);
+        break;
+      case MyPageCategory.MY_FOLLOWEE:
+        loadMyFollowee(myFolloweesState.pageToken);
         break;
       default:
         break;
@@ -85,11 +97,13 @@ const MyPage: React.FC<RouteComponentProps> = () => {
         );
       case MyPageCategory.MY_FOLLOWER:
         return (
-          <div>{myFollowersState.myFollowers.length}</div>
+          myFollowersState.follows.map(follow => (
+            <FollowCard id={follow.id} imagePath={follow.imagePath} nickname={follow.nickname} key={follow.id}/>
+          ))
         );
       case MyPageCategory.MY_FOLLOWEE:
         return (
-          <div>followee</div>
+          <div>{myFolloweesState.follows.length}</div>
         );
     }
   }
@@ -147,25 +161,40 @@ const MyPage: React.FC<RouteComponentProps> = () => {
     }
 
     if(pageToken==null){
-      setMyFollowersState({
-        myFollowers: response.follows,
-        pageToken: response.pageToken
-      })
+      setMyFollowersState(response)
     } 
     else{
       setMyFollowersState({
-        myFollowers: myFollowersState.myFollowers.concat(response.follows),
+        follows: myFollowersState.follows.concat(response.follows),
         pageToken: response.pageToken
       })
     }
   }
-  
-  const handleMyFollowee = () => setMyPageState({myPageCategory: MyPageCategory.MY_FOLLOWEE});
+
+  const loadMyFollowee = async (pageToken:number|null) => {
+    setMyPageState({myPageCategory: MyPageCategory.MY_FOLLOWEE});
+    const response = await getMyFollowees(userInfo.id, pageToken);
+    
+    if('error' in response){
+      alert(response.error.message);
+      return;
+    }
+
+    if(pageToken==null){
+      setMyFolloweesState(response)
+    } 
+    else{
+      setMyFolloweesState({
+        follows: myFolloweesState.follows.concat(response.follows),
+        pageToken: response.pageToken
+      })
+    }
+  }
 
   const options: Array<NavOption> = [
     { label: "내 영상", eventKey: "my_video", onClickHandler: () => loadMyVideo(myVideosState.pageToken) },
     { label: "팔로워", eventKey: "my_follower", onClickHandler: () => loadMyFollower(myFollowersState.pageToken) },
-    { label: "팔로잉", eventKey: "my_followee", onClickHandler: () => handleMyFollowee() }
+    { label: "팔로잉", eventKey: "my_followee", onClickHandler: () => loadMyFollowee(myFolloweesState.pageToken) }
   ]
 
   return (
