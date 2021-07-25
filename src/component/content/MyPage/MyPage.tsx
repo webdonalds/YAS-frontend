@@ -103,7 +103,9 @@ const MyPage: React.FC<RouteComponentProps> = () => {
         );
       case MyPageCategory.MY_FOLLOWEE:
         return (
-          <div>{myFolloweesState.follows.length}</div>
+          myFolloweesState.follows.map(follow => (
+            <FollowCard id={follow.id} imagePath={follow.imagePath} nickname={follow.nickname} key={follow.id}/>
+          ))
         );
     }
   }
