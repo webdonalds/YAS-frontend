@@ -166,44 +166,42 @@ const getVideo = async (postId: string): Promise<VideoPostInfoWithUser> => {
   return res.data;
 }
 
-const postVideo = async (videoId: string, title: string, description: string, tags: Array<string>): Promise<PostVideoResponse> => {
-  const res = await axios.request({
-    baseURL: API_URL,
-    url: '/v1/post/video',
-    method: 'post',
-    data: {
-      videoId: videoId,
-      title: title,
-      description: description,
-      tags: tags,
-    },
-  });
-
-  const ok = res.status == 200;
-  return {
-    ok: ok,
-    postId: ok ? res.data.postId : -1
-  };
+const postVideo = async (videoId: string, title: string, description: string, tags: Array<string>): Promise<number | null> => {
+  try {
+    const res = await axios.request({
+      baseURL: API_URL,
+      url: '/v1/post/video',
+      method: 'post',
+      data: {
+        videoId: videoId,
+        title: title,
+        description: description,
+        tags: tags,
+      },
+    });
+    return res.data.postId;
+  } catch(error) {
+    return null;
+  }
 }
 
-const modifyVideo = async (postId: string, title: string, description: string, tags: Array<string>): Promise<PostVideoResponse> => {
-  const res = await axios.request({
-    baseURL: API_URL,
-    url: '/v1/post/video',
-    method: 'put',
-    data: {
-      videoPostId: postId,
-      title: title,
-      description: description,
-      tags: tags,
-    },
-  });
-
-  const ok = res.status == 200;
-  return {
-    ok: ok,
-    postId: Number(postId)
-  };
+const modifyVideo = async (postId: string, title: string, description: string, tags: Array<string>): Promise<number | null> => {
+  try {
+    const res = await axios.request({
+      baseURL: API_URL,
+      url: '/v1/post/video',
+      method: 'put',
+      data: {
+        videoPostId: postId,
+        title: title,
+        description: description,
+        tags: tags,
+      },
+    });
+    return res.data.postId;
+  } catch(error) {
+    return null;
+  }
 }
 
 const deleteVideo = async (postId: string): Promise<boolean> => {
