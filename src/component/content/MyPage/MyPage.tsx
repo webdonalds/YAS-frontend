@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { withRouter, RouteComponentProps, Redirect } from "react-router-dom";
 import GetLogin from "../../../hooks/GetLogin";
 import utils from "../../../service/utils";
-import { getMyVideos } from '../../../api/myPage';
+import { getMyVideos, getMyFollowers } from '../../../api/myPage';
 import { useBottomScrollListener } from 'react-bottom-scroll-listener';
 import NavBar, { NavOption } from '../Commons/NavBar/NavBar';
 
@@ -22,7 +22,12 @@ type MyPageState = {
 }
 
 type MyVideosState = {
-  myVideos: Array<VideoPostInfoWithUser>
+  myVideos: Array<VideoPostInfoWithUser>,
+  pageToken: number|null
+}
+
+type MyFollowersState = {
+  myFollowers: Array<FollowInfo>,
   pageToken: number|null
 }
 
@@ -37,6 +42,12 @@ const MyPage: React.FC<RouteComponentProps> = () => {
     myVideos: [],
     pageToken: null
   });
+
+  const [ myFollowersState, setMyFollowersState ] = useState<MyFollowersState>({
+    myFollowers: [],
+    pageToken: null
+  });
+
 
   // Init my videos
   useEffect(() => {
@@ -73,9 +84,13 @@ const MyPage: React.FC<RouteComponentProps> = () => {
           ))
         );
       case MyPageCategory.MY_FOLLOWER:
-        return (<div>my follower</div>);
+        return (
+          <div>{myFollowersState.myFollowers.length}</div>
+        );
       case MyPageCategory.MY_FOLLOWEE:
-        return (<div>my followee</div>);
+        return (
+          <div>followee</div>
+        );
     }
   }
  
@@ -121,14 +136,35 @@ const MyPage: React.FC<RouteComponentProps> = () => {
       });
     }
   };
-  
-  const handleMyFollower = () => setMyPageState({myPageCategory: MyPageCategory.MY_FOLLOWER});
 
+  const loadMyFollower = async (pageToken:number|null) => {
+    setMyPageState({myPageCategory: MyPageCategory.MY_FOLLOWER});
+    const response = await getMyFollowers(userInfo.id, pageToken);
+    
+    if('error' in response){
+      alert(response.error.message);
+      return;
+    }
+
+    if(pageToken==null){
+      setMyFollowersState({
+        myFollowers: response.follows,
+        pageToken: response.pageToken
+      })
+    } 
+    else{
+      setMyFollowersState({
+        myFollowers: myFollowersState.myFollowers.concat(response.follows),
+        pageToken: response.pageToken
+      })
+    }
+  }
+  
   const handleMyFollowee = () => setMyPageState({myPageCategory: MyPageCategory.MY_FOLLOWEE});
 
   const options: Array<NavOption> = [
     { label: "내 영상", eventKey: "my_video", onClickHandler: () => loadMyVideo(myVideosState.pageToken) },
-    { label: "팔로워", eventKey: "my_follower", onClickHandler: () => handleMyFollower() },
+    { label: "팔로워", eventKey: "my_follower", onClickHandler: () => loadMyFollower(myFollowersState.pageToken) },
     { label: "팔로잉", eventKey: "my_followee", onClickHandler: () => handleMyFollowee() }
   ]
 
