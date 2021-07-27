@@ -76,10 +76,11 @@ const getMyFollowers = async (userId:number, pageToken:number|null): Promise<Fol
     try{
         const res = await axios.request({
             baseURL: API_URL,
-            url: `/v1/follow/followersByFollowee/${userId}`,
+            url: `/v1/follow`,
             method: 'get',
             params: {
-                pageToken: pageToken
+                pageToken: pageToken,
+                followeeId: userId
             }
         })
 
@@ -93,10 +94,11 @@ const getMyFollowees = async (userId:number, pageToken:number|null): Promise<Fol
     try{
         const res = await axios.request({
             baseURL: API_URL,
-            url: `/v1/follow/followeesByFollower/${userId}`,
+            url: `/v1/follow`,
             method: 'get',
             params: {
-                pageToken: pageToken
+                pageToken: pageToken,
+                followerId: userId
             }
         })
 
