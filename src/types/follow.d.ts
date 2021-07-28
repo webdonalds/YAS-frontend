@@ -1,7 +1,8 @@
 declare type FollowInfo = {
   id: number,
   nickname: string,
-  imagePath: strring
+  imagePath: string,
+  aboutMe: string
 }
 
 declare type FollowListResponse = {

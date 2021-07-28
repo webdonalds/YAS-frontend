@@ -98,13 +98,13 @@ const MyPage: React.FC<RouteComponentProps> = () => {
       case MyPageCategory.MY_FOLLOWER:
         return (
           myFollowersState.follows.map(follow => (
-            <FollowCard id={follow.id} imagePath={follow.imagePath} nickname={follow.nickname} key={follow.id}/>
+            <FollowCard id={follow.id} imagePath={follow.imagePath} nickname={follow.nickname} aboutMe={follow.aboutMe} key={follow.id}/>
           ))
         );
       case MyPageCategory.MY_FOLLOWEE:
         return (
           myFolloweesState.follows.map(follow => (
-            <FollowCard id={follow.id} imagePath={follow.imagePath} nickname={follow.nickname} key={follow.id}/>
+            <FollowCard id={follow.id} imagePath={follow.imagePath} nickname={follow.nickname} aboutMe={follow.aboutMe} key={follow.id}/>
           ))
         );
     }
@@ -202,7 +202,9 @@ const MyPage: React.FC<RouteComponentProps> = () => {
   return (
     <div className="container mx-auto">
       {MyInfoCard}
-      <NavBar navOptions={options}/>
+      <div className="flex justify-center my-10">
+        <NavBar navOptions={options}/>
+      </div>
       <div className="p-10 grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
         {getContent(myPageState)} 
       </div>
