@@ -81,7 +81,10 @@ const Video: React.FC<VideoProps> = (props) => {
   const getLikeView = () => {
     const iconClassName = "inline cursor-pointer w-5 h-5";
     const onClickEvent = () => {
-      if(userInfo == null)  return;
+      if(userInfo == null) {
+        alert("로그인을 하고 진행해주세요.");
+        return null;
+      }
       setLike(postId, !myLike);
       addLikes(myLike ? -1 : 1);
     }

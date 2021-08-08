@@ -181,6 +181,7 @@ const postVideo = async (videoId: string, title: string, description: string, ta
     });
     return res.data.postId;
   } catch(error) {
+    console.log(error);
     return null;
   }
 }
@@ -200,6 +201,7 @@ const modifyVideo = async (postId: string, title: string, description: string, t
     });
     return res.data.postId;
   } catch(error) {
+    console.log(error);
     return null;
   }
 }
