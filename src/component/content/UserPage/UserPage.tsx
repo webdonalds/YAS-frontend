@@ -82,7 +82,7 @@ const UserPage: React.FC<UserPageProps> = (props) => {
     
     if('error' in userInfoResponse){
       alert(userInfoResponse.error.message);
-      return <Redirect to="/"/>;
+      return;
     }
 
     const isFollowingResponse = await getIsFollowing(userId, loginUserId);
@@ -121,7 +121,7 @@ const UserPage: React.FC<UserPageProps> = (props) => {
   if(loginUserInfo == null) {
     alert("로그인이 필요한 페이지입니다.");
     return <Redirect to="/"/>;
-  } 
+  }
   
   const getContent = (state: UserPageState) => {
     switch(state.userPageCategory){
