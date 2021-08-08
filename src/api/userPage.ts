@@ -6,7 +6,7 @@ type PutUserInfoResponse = {
     aboutMe: string | null
 }
 
-type GetMyVideosResponse = {
+type GetUserVideosResponse = {
     videoList: Array<VideoPostInfoWithUser>,
     pageToken: number|null
 }
@@ -14,6 +14,20 @@ type GetMyVideosResponse = {
 type PutProfileImageResponse = {
     message: string
 }
+
+type IsFollowingResponse = {
+    isFollowing: boolean
+}
+
+type PostFollowResponse = {
+    followerId: number,
+    followeeId: number
+}       
+  
+type DeleteFollowResponse = {
+    message: string
+}
+  
 
 const putUserInfo = async (nickname:string, aboutMe:string|null): Promise<ErrorResponse | PutUserInfoResponse>=> {
     try{
@@ -50,7 +64,7 @@ const putProfileImage = async (imagePath: string | null): Promise<ErrorResponse 
     }
 }
 
-const getMyVideos = async (userId:number, pageToken:number|null): Promise<GetMyVideosResponse | ErrorResponse> => {
+const getUserVideos = async (userId:number, pageToken:number|null): Promise<GetUserVideosResponse | ErrorResponse> => {
     try{
         const res = await axios.request({
             baseURL: API_URL,
@@ -72,7 +86,7 @@ const getMyVideos = async (userId:number, pageToken:number|null): Promise<GetMyV
     }
 };
 
-const getMyFollowers = async (userId:number, pageToken:number|null): Promise<FollowListResponse | ErrorResponse> => {
+const getUserFollowers = async (userId:number, pageToken:number|null): Promise<FollowListResponse | ErrorResponse> => {
     try{
         const res = await axios.request({
             baseURL: API_URL,
@@ -90,7 +104,7 @@ const getMyFollowers = async (userId:number, pageToken:number|null): Promise<Fol
     }
 }
 
-const getMyFollowees = async (userId:number, pageToken:number|null): Promise<FollowListResponse | ErrorResponse> => {
+const getUserFollowees = async (userId:number, pageToken:number|null): Promise<FollowListResponse | ErrorResponse> => {
     try{
         const res = await axios.request({
             baseURL: API_URL,
@@ -108,10 +122,59 @@ const getMyFollowees = async (userId:number, pageToken:number|null): Promise<Fol
     }
 }
 
+const getIsFollowing = async (followeeId:number, followerId:number): Promise<IsFollowingResponse | ErrorResponse> => {
+    try {
+        const res = await axios.request({
+            baseURL: API_URL,
+            url: `/v1/follow/isFollowing`,
+            method: 'get',
+            params: {
+                followeeId: followeeId,
+                followerId: followerId
+            }
+        })
+
+        return res.data;
+    } catch(error) {
+        return <ErrorResponse> error.response.data
+    }
+}
+
+const followUser = async (followeeId:number): Promise<PostFollowResponse | ErrorResponse> => {
+    try {
+        const res = await axios.request({
+            baseURL: API_URL,
+            url: `/v1/follow/${followeeId}`,
+            method: 'post',
+        })
+
+        return res.data;
+    } catch(error) {
+        return <ErrorResponse> error.response.data
+    }
+}
+
+const unfollowUser = async (followeeId:number): Promise<DeleteFollowResponse | ErrorResponse> => {
+    try {
+        const res = await axios.request({
+            baseURL: API_URL,
+            url: `/v1/follow/${followeeId}`,
+            method: 'delete',
+        })
+
+        return res.data;
+    } catch(error) {
+        return <ErrorResponse> error.response.data
+    }
+}
+
 export {
   putUserInfo,
   putProfileImage,
-  getMyVideos,
-  getMyFollowers,
-  getMyFollowees,
+  getUserVideos,
+  getUserFollowers,
+  getUserFollowees,
+  getIsFollowing,
+  followUser,
+  unfollowUser,
 }; 

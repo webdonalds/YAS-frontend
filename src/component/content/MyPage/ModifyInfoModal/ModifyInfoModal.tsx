@@ -3,7 +3,7 @@ import { useDispatch } from "react-redux";
 import { Redirect } from "react-router-dom";
 import { Button, Modal, Card } from 'react-bootstrap';
 import utils from "../../../../service/utils";
-import { putUserInfo, putProfileImage } from "../../../../api/myPage";
+import { putUserInfo, putProfileImage } from "../../../../api/userPage";
 import "./ModifyInfoModal.css";
 import { getSavedLoginThunk } from "../../../../modules/auth/authThunk";
 import imageManageService from '../../../../service/imageManageService';

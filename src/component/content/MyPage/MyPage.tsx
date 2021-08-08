@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { withRouter, RouteComponentProps, Redirect } from "react-router-dom";
 import GetLogin from "../../../hooks/GetLogin";
 import utils from "../../../service/utils";
-import { getMyVideos, getMyFollowers, getMyFollowees } from '../../../api/myPage';
+import { getUserVideos, getUserFollowers, getUserFollowees } from '../../../api/userPage';
 import { useBottomScrollListener } from 'react-bottom-scroll-listener';
 import NavBar, { NavOption } from '../Commons/NavBar/NavBar';
 
@@ -84,7 +84,6 @@ const MyPage: React.FC<RouteComponentProps> = () => {
     alert("로그인이 필요한 페이지입니다.");
     return <Redirect to="/"/>;
   } 
-
   
   const getContent = (state: MyPageState) => {
     switch(state.myPageCategory){
@@ -110,7 +109,6 @@ const MyPage: React.FC<RouteComponentProps> = () => {
     }
   }
  
-
   const MyInfoCard = (
     <div className="max-w-md mx-auto overflow-hidden">
       <div className="flex">
@@ -129,10 +127,9 @@ const MyPage: React.FC<RouteComponentProps> = () => {
     </div>
   )
 
-
   const loadMyVideo = async (pageToken:number|null) => {
     setMyPageState({myPageCategory: MyPageCategory.MY_VIDEO});
-    const response = await getMyVideos(userInfo.id, pageToken);
+    const response = await getUserVideos(userInfo.id, pageToken);
 
     if('error' in response){
       alert(response.error.message);
@@ -155,7 +152,7 @@ const MyPage: React.FC<RouteComponentProps> = () => {
 
   const loadMyFollower = async (pageToken:number|null) => {
     setMyPageState({myPageCategory: MyPageCategory.MY_FOLLOWER});
-    const response = await getMyFollowers(userInfo.id, pageToken);
+    const response = await getUserFollowers(userInfo.id, pageToken);
     
     if('error' in response){
       alert(response.error.message);
@@ -175,7 +172,7 @@ const MyPage: React.FC<RouteComponentProps> = () => {
 
   const loadMyFollowee = async (pageToken:number|null) => {
     setMyPageState({myPageCategory: MyPageCategory.MY_FOLLOWEE});
-    const response = await getMyFollowees(userInfo.id, pageToken);
+    const response = await getUserFollowees(userInfo.id, pageToken);
     
     if('error' in response){
       alert(response.error.message);
