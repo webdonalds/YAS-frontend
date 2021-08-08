@@ -4,7 +4,7 @@ import { RootState } from '..';
 import { AuthAction, loginRequest, loginSuccess, loginError, logoutRequest } from './auth';
 import { getAuthToken, refreshAuthToken } from '../../api/login';
 import localStorageService from '../../service/localStorageService';
-import { getUserInfo } from '../../api/user';
+import { getLoginUserInfo } from '../../api/user';
 
 const JWT_EXPIRY_TIME = 3600*1000;
 const JWT_REFRESH_FREQUENCY = JWT_EXPIRY_TIME / 2;
@@ -77,7 +77,7 @@ const getSavedLoginThunk = (): ThunkAction<void, RootState, null, AuthAction> =>
     }
   
     await refresh(dispatch);
-    const userInfo = await getUserInfo();
+    const userInfo = await getLoginUserInfo();
 
     // if api call fails
     if('error' in userInfo){
