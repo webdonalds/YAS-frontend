@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
+import { withRouter } from "react-router-dom";
 import VideoHook from "../../../hooks/Video";
 import AddVideoModal from "./AddVideoModal";
 import GetLogin from "../../../hooks/GetLogin";
 import { FaTimes } from 'react-icons/fa';
 import { postVideo, modifyVideo, deleteVideo } from "../../../api/addVideo";
 import { maxTagCount, maxTagLength, titleMaxLength, titleMinLength, descriptionMaxLength, tagAllowedPattern } from "../../../constant/Addvideo";
-import { match, Redirect } from "react-router-dom";
+import { match, Redirect, RouteComponentProps } from "react-router-dom";
 import { getYoutubeIframeContainer, getYoutubeUrl } from "../../../util/youtube";
 import { BsTag } from "react-icons/bs";
 
@@ -18,19 +19,18 @@ type AddVideoProps = {
   match: match<AddVideoPathVariable>
 };
 
-const AddVideo: React.FC<AddVideoProps> = (props) => {
+const AddVideo: React.FC<AddVideoProps & RouteComponentProps> = (props) => {
   const { userInfo } = GetLogin();
-  const { initialized, id, url, title, description, tags, user, init, setUrl, setTitle, setDescription, addTag, deleteTag } = VideoHook();
+  const { initialized, id:videoId, url, title, description, tags, user, init, setUrl, setTitle, setDescription, addTag, deleteTag } = VideoHook();
   const [tag, setTag] = useState("");
 
-  // mount될 때만 init함수가 실행되도록 하고 싶어서 lint warning을 없앴습니다.
   useEffect(() => {
     if (props.isUpdate) {
       init(props.match.params.postId);
     } else {
       init(null);
     }
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [props.isUpdate, props.match.params.postId]); // eslint-disable-line react-hooks/exhaustive-deps
 
   if (userInfo == null) {
     alert("로그인이 필요한 페이지입니다.");
@@ -59,8 +59,8 @@ const AddVideo: React.FC<AddVideoProps> = (props) => {
   );
 
   // is memoization needed?
-  const thumbnailView = (id != "") ? (<div className="mt-3">
-    {getYoutubeIframeContainer(id)}
+  const thumbnailView = (videoId != "") ? (<div className="mt-3">
+    {getYoutubeIframeContainer(videoId)}
   </div>) : (<div className="relative max-w-full h-0 overflow-hidden pb-1/2 text-gray-500 text-center">
     <div className="absolute top-0 left-0 w-full h-full">
       <FaTimes className="w-4/5 h-4/5 m-0 m-auto" />
@@ -143,7 +143,7 @@ const AddVideo: React.FC<AddVideoProps> = (props) => {
   };
 
   const handleSubmit = async (): Promise<void> => {
-    if (id == "") {
+    if (videoId == "") {
       alert("정상적인 유튜브 동영상을 입력해주세요.");
       return;
     }
@@ -161,23 +161,24 @@ const AddVideo: React.FC<AddVideoProps> = (props) => {
     }
 
     // TODO: error handling
-    let ok = false;
+    let postId: number | null;
     if (props.isUpdate) {
-      ok = await modifyVideo(props.match.params.postId, title, description, tags);
-      if (!ok) {
+      postId = await modifyVideo(props.match.params.postId, title, description, tags);
+      if (postId == null) {
         alert("알 수 없는 에러가 발생하였습니다.");
         return;
       }
+      alert("수정이 완료되었습니다.");
     } else {
-      ok = await postVideo(id, title, description, tags);
-      if (!ok) {
+      postId = await postVideo(videoId, title, description, tags);
+      if (postId == null) {
         alert("알 수 없는 에러가 발생하였습니다.");
         return;
       }
+      alert("등록이 완료되었습니다.");
     }
 
-    // TODO: 동영상 페이지로 리다이렉트
-    alert("등록이 완료되었습니다.");
+    props.history.push(`/video/${postId}`)
   }
 
   const handleDelete = async () => {
@@ -188,8 +189,8 @@ const AddVideo: React.FC<AddVideoProps> = (props) => {
         return;
       }
 
-      // TODO: 메인 페이지로 리다이렉트
       alert("삭제 되었습니다.");
+      props.history.push("/");
     }
   };
 
@@ -227,4 +228,4 @@ const AddVideo: React.FC<AddVideoProps> = (props) => {
   </div>);
 }
 
-export default AddVideo;
+export default withRouter(AddVideo);

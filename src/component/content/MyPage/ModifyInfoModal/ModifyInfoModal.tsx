@@ -64,7 +64,6 @@ const ModifyInfoModal: React.FC<UserData> = (userInfo) => {
           imagePath: resizedImageString
         })
       } catch (e) {
-        console.log(e.message);
         alert("이미지 파일을 확인해주세요.");
       }
     }

@@ -69,6 +69,11 @@ type AxiosVideoResponse<T> = {
   nextPageToken: string | undefined,
 };
 
+export type PostVideoResponse = {
+  ok: boolean,
+  postId: number,
+}
+
 const getPlayLists = async (pageToken: string|undefined = undefined): Promise<PlayListsResponse> => {
   const res = await axios.request<PlayListsResponse>({
     baseURL: API_URL,
@@ -161,34 +166,44 @@ const getVideo = async (postId: string): Promise<VideoPostInfoWithUser> => {
   return res.data;
 }
 
-const postVideo = async (videoId: string, title: string, description: string, tags: Array<string>): Promise<boolean> => {
-  const res = await axios.request({
-    baseURL: API_URL,
-    url: '/v1/post/video',
-    method: 'post',
-    data: {
-      videoId: videoId,
-      title: title,
-      description: description,
-      tags: tags,
-    },
-  });
-  return res.status == 200;
+const postVideo = async (videoId: string, title: string, description: string, tags: Array<string>): Promise<number | null> => {
+  try {
+    const res = await axios.request({
+      baseURL: API_URL,
+      url: '/v1/post/video',
+      method: 'post',
+      data: {
+        videoId: videoId,
+        title: title,
+        description: description,
+        tags: tags,
+      },
+    });
+    return res.data.postId;
+  } catch(error) {
+    console.log(error);
+    return null;
+  }
 }
 
-const modifyVideo = async (postId: string, title: string, description: string, tags: Array<string>): Promise<boolean> => {
-  const res = await axios.request({
-    baseURL: API_URL,
-    url: '/v1/post/video',
-    method: 'put',
-    data: {
-      videoPostId: postId,
-      title: title,
-      description: description,
-      tags: tags,
-    },
-  });
-  return res.status == 200;
+const modifyVideo = async (postId: string, title: string, description: string, tags: Array<string>): Promise<number | null> => {
+  try {
+    const res = await axios.request({
+      baseURL: API_URL,
+      url: '/v1/post/video',
+      method: 'put',
+      data: {
+        videoPostId: postId,
+        title: title,
+        description: description,
+        tags: tags,
+      },
+    });
+    return res.data.postId;
+  } catch(error) {
+    console.log(error);
+    return null;
+  }
 }
 
 const deleteVideo = async (postId: string): Promise<boolean> => {

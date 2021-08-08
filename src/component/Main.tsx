@@ -24,8 +24,8 @@ const Main: React.FC = () => {
       <Switch>
         <Route path="/" exact={true} component={Home} />
         <Route path="/my-page" component={MyPage} />
-        <Route path="/add-video" render={({match}) => <AddVideo isUpdate={false} match={match} />} />
-        <Route path="/modify-video/:postId" render={({match}) => <AddVideo isUpdate={true} match={match} />} />
+        <Route path="/add-video" render={() => <AddVideo isUpdate={false} />} />
+        <Route path="/modify-video/:postId" render={() => <AddVideo isUpdate={true} />} />
         <Route path="/video/:postId" render={({match}) => <Video match={match} />} />
       </Switch>
     </>
