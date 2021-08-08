@@ -8,6 +8,7 @@ import Video from "./content/Video/Video";
 import Header from "./content/Header/Header";
 import Home from "./content/Home/Home";
 import MyPage from "./content/MyPage/MyPage";
+import UserPage from "./content/UserPage/UserPage";
 
 import "./Main.css";
 
@@ -24,6 +25,7 @@ const Main: React.FC = () => {
       <Switch>
         <Route path="/" exact={true} component={Home} />
         <Route path="/my-page" component={MyPage} />
+        <Route path="/user-page/:userId" render={({match}) => <UserPage match={match}/>} />
         <Route path="/add-video" render={({match}) => <AddVideo isUpdate={false} match={match} />} />
         <Route path="/modify-video/:postId" render={({match}) => <AddVideo isUpdate={true} match={match} />} />
         <Route path="/video/:postId" render={({match}) => <Video match={match} />} />
