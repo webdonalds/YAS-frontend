@@ -1,8 +1,11 @@
 import React, { useEffect } from "react";
-import { BsTag } from "react-icons/bs";
-import { match } from "react-router-dom";
+import { Link, match } from "react-router-dom";
+import GetLogin from "../../../hooks/GetLogin";
 import VideoHook from "../../../hooks/Video";
 import { getYoutubeIframeContainer } from "../../../util/youtube";
+import { BsTag, BsPencil } from 'react-icons/bs';
+import { FaRegThumbsUp, FaThumbsUp } from 'react-icons/fa'
+import LikeHook from "../../../hooks/Like";
 
 type VideoPathVariable = {
   postId: string
@@ -13,15 +16,27 @@ type VideoProps = {
 };
 
 const Video: React.FC<VideoProps> = (props) => {
-  const { id, title, description, tags, user, init } = VideoHook();
+  const { id, title, description, tags, user, totalLikes, init:videoInit, addLikes } = VideoHook();
+  const { like:myLike, init:likeInit, setLike } = LikeHook();
+  const postId = props.match.params.postId;
+  const { userInfo } = GetLogin();
+  const isMyVideo = user?.id == userInfo?.id;
 
   useEffect(() => {
-    init(props.match.params.postId);
+    videoInit(postId);
+    likeInit(postId);
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const titleView = (
     <div className="mt-4 font-sans font-bold text-3xl">
-      {title}
+      <div className="inline-block">
+        {title}
+      </div>
+      {
+        isMyVideo
+          ? <div className="float-right"><Link to={`/modify-video/${postId}`}><BsPencil className="cursor-pointer" /></Link></div>
+          : null
+      }
     </div>
   );
 
@@ -63,10 +78,31 @@ const Video: React.FC<VideoProps> = (props) => {
     </span>);
   };
 
-  const tagsView = (
+  const getLikeView = () => {
+    const iconClassName = "inline cursor-pointer w-5 h-5";
+    const onClickEvent = () => {
+      if(userInfo == null) {
+        alert("로그인을 하고 진행해주세요.");
+        return null;
+      }
+      setLike(postId, !myLike);
+      addLikes(myLike ? -1 : 1);
+    }
+    return (<div className="float-right">
+      {myLike
+        ? <FaThumbsUp className={iconClassName} onClick={onClickEvent} />
+        : <FaRegThumbsUp className={iconClassName} onClick={onClickEvent} />}
+      <div className="inline-block ml-3">
+        {totalLikes}
+      </div>
+    </div>);
+  };
+
+  const infoView = (
     <div className="mt-4 ml-auto mr-auto">
       <BsTag className="inline-block ml-3 w-7 h-7"/>
       {tags.map((tag, idx) => getTagView(tag, idx))}
+      {getLikeView()}
     </div>
   );
 
@@ -77,7 +113,7 @@ const Video: React.FC<VideoProps> = (props) => {
       {userProfileView}
       {descriptionView}
     </div>
-    {tagsView}
+    {infoView}
   </div>);
 }
 

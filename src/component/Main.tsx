@@ -25,8 +25,8 @@ const Main: React.FC = () => {
         <Route path="/" exact={true} component={Home} />
         <Route path="/my-page"> { userInfo ? <Redirect to={`/user-page/${userInfo.id}`} /> : <Redirect to="/" /> } </Route>
         <Route path="/user-page/:userId" render={({match}) => <UserPage match={match}/>} />
-        <Route path="/add-video" render={({match}) => <AddVideo isUpdate={false} match={match} />} />
-        <Route path="/modify-video/:postId" render={({match}) => <AddVideo isUpdate={true} match={match} />} />
+        <Route path="/add-video" render={() => <AddVideo isUpdate={false} />} />
+        <Route path="/modify-video/:postId" render={() => <AddVideo isUpdate={true} />} />
         <Route path="/video/:postId" render={({match}) => <Video match={match} />} />
       </Switch>
     </>
