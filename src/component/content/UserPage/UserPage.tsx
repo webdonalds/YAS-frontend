@@ -101,7 +101,7 @@ const UserPage: React.FC<UserPageProps> = (props) => {
       ...userPageState,
       userInfo: userInfoResponse,
       isFollowing: isFollowingResponse.isFollowing,
-      userPageCategory: UserPageCategory.USER_VIDEO,
+      userPageCategory: userPageState.userPageCategory,
       isMyPage: loginUserInfo != null && loginUserInfo.id == userId ? true : false
     });
 
