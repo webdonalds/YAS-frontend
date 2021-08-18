@@ -51,9 +51,11 @@ const VideoPostCard: React.FC<VideoPostInfoWithUser> = ( videoPost ) => {
         <img className="w-full" src={videoThumbnailUrl}/>
       </Link>
       <div className="px-2 py-2 h-44 relative">
-        <div className="inline-block align-top w-2/12 mr-1">
-          <img className="rounded-full h-10 w-10 object-cover cursor-pointer" src={videoPost.user.imagePath  ? videoPost.user.imagePath : utils.defaultProfileImage}/>
-        </div>
+        <Link to={`/user-page/${videoPost.user.id}`}>
+          <div className="inline-block align-top w-2/12 mr-1">
+            <img className="rounded-full h-10 w-10 object-cover cursor-pointer" src={videoPost.user.imagePath  ? videoPost.user.imagePath : utils.defaultProfileImage}/>
+          </div>
+        </Link>
         <div className="inline-block align-top w-9/12">
           <Link to={"/video/" + videoPost.id} style={{ textDecoration: 'none', color: 'black'}}>
             <div className="pl-1 text-base font-semibold inline-block max-h-10 overflow-hidden w-full leading-tight">{videoPost.title}</div>

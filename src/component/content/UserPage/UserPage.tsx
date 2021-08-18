@@ -28,9 +28,8 @@ enum UserPageCategory {
 
 type UserPageState = {
   userPageCategory: UserPageCategory,
-  userId: number,
-  isMyPage: boolean,
-  userInfo: UserData|null,
+  isMyPage: boolean|null,
+  userInfo: UserData,
   isFollowing: boolean|null
 }
 
@@ -44,14 +43,22 @@ type UserFollowsState = {
   pageToken: number|null
 }
 
+const dummyUser: UserData = {
+  aboutMe: "null",
+  email: "null",
+  id: -1,
+  imagePath: null,
+  nickname: "null"
+}
+
 const UserPage: React.FC<UserPageProps> = (props) => {
   const loginUserInfo = GetLogin().userInfo;
+  const { match } = props;
 
   const [ userPageState, setUserPageState ] = useState<UserPageState>({
     userPageCategory: UserPageCategory.USER_VIDEO,
-    userId: parseInt(props.match.params.userId),
-    isMyPage: loginUserInfo ? loginUserInfo.id == parseInt(props.match.params.userId) : false,
-    userInfo: loginUserInfo && loginUserInfo.id == parseInt(props.match.params.userId) ? loginUserInfo : null,
+    isMyPage: null,
+    userInfo: dummyUser,
     isFollowing: null
   });
 
@@ -70,16 +77,14 @@ const UserPage: React.FC<UserPageProps> = (props) => {
     pageToken: null
   });
 
-
   // Init my videos
   useEffect(() => {
-    loadUserVideo(null);
-    if(loginUserInfo != null) initUserPageState(userPageState.userId, loginUserInfo.id);
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+    if(loginUserInfo != null) initUserPageState(parseInt(match.params.userId), loginUserInfo.id);
+  }, [match]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const initUserPageState = async (userId:number, loginUserId:number) => {
     const userInfoResponse = await getUserInfo(userId);
-    
+
     if('error' in userInfoResponse){
       alert(userInfoResponse.error.message);
       return;
@@ -95,11 +100,39 @@ const UserPage: React.FC<UserPageProps> = (props) => {
     setUserPageState({
       ...userPageState,
       userInfo: userInfoResponse,
-      isFollowing: isFollowingResponse.isFollowing
+      isFollowing: isFollowingResponse.isFollowing,
+      userPageCategory: UserPageCategory.USER_VIDEO,
+      isMyPage: loginUserInfo != null && loginUserInfo.id == userId ? true : false
     });
+
+    const userVideosResponse = await getUserVideos(userId, null);
+
+    if('error' in userVideosResponse){
+      alert(userVideosResponse.error.message);
+      return;
+    }
+
+    const userFollowersResponse = await getUserFollowers(userId, null);
+    
+    if('error' in userFollowersResponse){
+      alert(userFollowersResponse.error.message);
+      return;
+    }
+
+    const userFolloweesResponse = await getUserFollowees(userId, null);
+    
+    if('error' in userFolloweesResponse){
+      alert(userFolloweesResponse.error.message);
+      return;
+    }
+    
+    setUserVideosState({userVideos: userVideosResponse.videoList, pageToken: userVideosResponse.pageToken});
+    setUserFollowersState({follows: userFollowersResponse.follows, pageToken: userFollowersResponse.pageToken});
+    setUserFolloweesState({follows: userFolloweesResponse.follows, pageToken: userFolloweesResponse.pageToken});
   }
 
-  const loadMoreVideo = () => {
+
+  const loadMoreContents = () => {
     switch(userPageState.userPageCategory){
       case UserPageCategory.USER_VIDEO:
         loadUserVideo(userVideosState.pageToken);
@@ -116,7 +149,7 @@ const UserPage: React.FC<UserPageProps> = (props) => {
   }
 
   // handle end of the scroll
-  useBottomScrollListener(loadMoreVideo);
+  useBottomScrollListener(loadMoreContents);
 
   if(loginUserInfo == null) {
     alert("로그인이 필요한 페이지입니다.");
@@ -153,9 +186,9 @@ const UserPage: React.FC<UserPageProps> = (props) => {
     let response;
     
     if(userPageState.isFollowing){
-      response = await unfollowUser(userPageState.userId);
+      response = await unfollowUser(userPageState.userInfo.id);
     } else{
-      response = await followUser(userPageState.userId);
+      response = await followUser(userPageState.userInfo.id);
     }
 
     if('error' in response){
@@ -252,6 +285,10 @@ const UserPage: React.FC<UserPageProps> = (props) => {
     }
   }
 
+  const onNavClick = (userPageCategory: UserPageCategory) => {
+    setUserPageState({...userPageState, userPageCategory: userPageCategory});
+  }
+
   const loadUserFollowee = async (pageToken:number|null) => {
     setUserPageState({...userPageState, userPageCategory: UserPageCategory.USER_FOLLOWEE});
 
@@ -276,9 +313,9 @@ const UserPage: React.FC<UserPageProps> = (props) => {
   }
 
   const options: Array<NavOption> = [
-    { label: "영상", eventKey: "user_video", onClickHandler: () => loadUserVideo(userVideosState.pageToken) },
-    { label: "팔로워", eventKey: "user_follower", onClickHandler: () => loadUserFollower(userFollowersState.pageToken) },
-    { label: "팔로잉", eventKey: "user_followee", onClickHandler: () => loadUserFollowee(userFolloweesState.pageToken) }
+    { label: "영상", eventKey: "user_video", onClickHandler: () => onNavClick(UserPageCategory.USER_VIDEO) },
+    { label: "팔로워", eventKey: "user_follower", onClickHandler: () => onNavClick(UserPageCategory.USER_FOLLOWER) },
+    { label: "팔로잉", eventKey: "user_followee", onClickHandler: () => onNavClick(UserPageCategory.USER_FOLLOWEE) }
   ]
 
   return (

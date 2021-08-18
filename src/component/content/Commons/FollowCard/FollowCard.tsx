@@ -14,7 +14,7 @@ const FollowCard: React.FC<FollowInfo> = ( follow ) => {
           <img className="rounded-full h-12 w-12 object-cover cursor-pointer" src={follow.imagePath  ? follow.imagePath : utils.defaultProfileImage}/>
         </div>
         <div className="inline-block align-top w-9/12">
-          <Link to={"/"} style={{ textDecoration: 'none', color: 'black'}}>
+          <Link to={`/user-page/${follow.id}`} style={{ textDecoration: 'none', color: 'black'}}>
             <div className="pl-1 text-base font-semibold inline-block max-h-10 overflow-hidden w-full leading-tight">{follow.nickname}</div>
           </Link>
           <div className="text-gray-700 text-sm font-semibold overflow-hidden max-h-12 leading-tight">
